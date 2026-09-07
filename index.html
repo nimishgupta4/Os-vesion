@@ -1326,7 +1326,7 @@ async function callAiProvider(settings, userMessage){
     const messages = [ { role:"system", content: systemPrompt }, ...aiChatHistory.filter(m=>m.role!=="system-note").map(m=>({ role:m.role, content:m.content })) ];
     const res = await fetch("https://api.openai.com/v1/chat/completions", {
       method:"POST",
-      headers:{ "Content-Type":"application/json", "Authorization":"Bearer " + settings.apiKey },
+      
       body: JSON.stringify({ model:"gpt-4o-mini", messages, temperature:0.5 })
     });
     if(!res.ok) throw new Error("OpenAI API error: " + res.status);
@@ -1334,7 +1334,7 @@ async function callAiProvider(settings, userMessage){
     return data?.choices?.[0]?.message?.content || "(No response text returned.)";
   }
 }
-
+headers:{"Content-Type":"application/json","x-goog-api-key": settings.apiKey
 /* ---------------- NAVIGATION ---------------- */
 const pageMeta = {
   dashboard: ["Dashboard", "Overview of school operations"],
