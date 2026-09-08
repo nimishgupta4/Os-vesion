@@ -354,7 +354,7 @@
 
 <div id="toast-stack"></div>
 <div id="modal-root"></div>
-<script>
+        <script>
 const ICON_PATHS = {
   "layout-dashboard": '<rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/>',
   "user-plus": '<circle cx="9" cy="7" r="4"/><path d="M2 21v-1a6 6 0 0 1 6-6h1"/><path d="M19 8v6M22 11h-6"/>',
@@ -458,141 +458,7 @@ function closeModal(){
   if(gsapOK() && panel && backdrop){ try{ gsap.to(panel, {opacity:0, scale:.95, y:8, duration:.16}); gsap.to(backdrop, {opacity:0, duration:.16, onComplete:()=>{ root.innerHTML=""; }}); return; }catch(e){} }
   root.innerHTML = "";
 }
-  function defaultDB(){ return { students: [], timetables: {}, marks: {}, settings: {} }; }
-let DB = defaultDB();
-function ensureDBShape(){ if(!DB.students) DB.students = []; if(!DB.timetables) DB.timetables = {}; if(!DB.marks) DB.marks = {}; if(!DB.settings) DB.settings = {}; }
-let _firestoreSave = null;
-function saveDatabase(){ if(_firestoreSave) _firestoreSave(DB); else console.warn("Not connected to Firestore yet."); }
-function uid(prefix){ return prefix + "_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2,8); }
-function rerenderActiveView(){
-  const active = document.querySelector(".view.active"); renderDashboard();
-  if(!active) return;
-  const view = active.id.replace("view-","");
-  if(view==="students") renderStudentTable(); if(view==="fees") renderFeeTable(); if(view==="timetable") { populateClassList(); renderTimetablePreview(); }
-}
-function normalizeFeeStatus(raw){ if(!raw) return "PENDING"; const v = String(raw).trim().toLowerCase(); return ["paid","clear","cleared","complete","completed","yes","done"].includes(v) ? "PAID" : "PENDING"; }
-const HEADER_MAP = { name:"name", studentname:"name", rollno:"rollNo", rollnumber:"rollNo", roll:"rollNo", class:"className", grade:"className", feestatus:"feeStatus", fees:"feeStatus", paymentstatus:"feeStatus" };
-function findStudent(id){ return DB.students.find(s=>s.id===id); }
-function upsertStudent(student){ const idx = DB.students.findIndex(s=>s.id===student.id); if(idx>=0) DB.students[idx] = student; else DB.students.push(student); saveDatabase(); }
-function deleteStudent(id){ DB.students = DB.students.filter(s=>s.id!==id); saveDatabase(); renderStudentTable(); renderDashboard(); toast("Student deleted.", "success"); }
-
-function submitAdmission(){
-  const name = document.getElementById("adm-name").value.trim(), rollNo = document.getElementById("adm-roll").value.trim(), className = document.getElementById("adm-class").value.trim(), feeStatus = document.getElementById("adm-fee").value;
-  if(!name || !rollNo || !className) return toast("Name, Roll No and Class are required.", "error");
-  upsertStudent({ id: uid("stu"), name, rollNo, className, feeStatus, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() });
-  document.getElementById("admission-success-detail").textContent = `${name} · Roll ${rollNo} · ${className}`;
-  const successWrap = document.getElementById("admission-success"); successWrap.classList.remove("hidden"); successWrap.classList.add("flex");
-  if(gsapOK()) try{ gsap.fromTo(successWrap, {opacity:0}, {opacity:1, duration:.25}); gsap.fromTo(successWrap.querySelector("div"), {scale:.6, opacity:0}, {scale:1, opacity:1, duration:.4, ease:"back.out(2)"}); }catch(e){}
-  safeIcons();
-  setTimeout(()=>{ const revert = ()=>{ successWrap.classList.add("hidden"); successWrap.classList.remove("flex"); document.getElementById("adm-name").value = ""; document.getElementById("adm-roll").value = ""; document.getElementById("adm-class").value = ""; document.getElementById("adm-fee").value = "PENDING"; }; if(gsapOK()){ try{ gsap.to(successWrap, {opacity:0, duration:.25, onComplete:revert}); return; }catch(e){} } revert(); }, 1700);
-  toast("Student admitted.", "success");
-}
-function handleExcelUpload(evt){
-  const file = evt.target.files[0]; if(!file) return;
-  const statusEl = document.getElementById("import-status"); statusEl.innerHTML = `<span class="text-[var(--ink-soft)]">Parsing Excel…</span>`;
-  const reader = new FileReader();
-  reader.onload = function(e){
-    try{
-      const data = new Uint8Array(e.target.result); const workbook = XLSX.read(data, { type:"array" }); const sheet = workbook.Sheets[workbook.SheetNames[0]]; const rows = XLSX.utils.sheet_to_json(sheet, { defval:"" });
-      let imported = 0, invalid = 0;
-      rows.forEach(row=>{
-        const normalizedRow = {}; Object.keys(row).forEach(k=>{ const mapped = HEADER_MAP[String(k||"").trim().toLowerCase().replace(/[\s_]+/g,"")]; if(mapped) normalizedRow[mapped] = row[k]; });
-        if(Object.values(row).every(v=>String(v).trim()==="")) return;
-        const name = String(normalizedRow.name||"").trim(), rollNo = String(normalizedRow.rollNo||"").trim(), className = String(normalizedRow.className||"").trim();
-        if(!name || !rollNo || !className){ invalid++; return; }
-        const existing = DB.students.find(s=> s.rollNo===rollNo && s.className.toLowerCase()===className.toLowerCase());
-        const record = existing ? Object.assign({}, existing) : { id: uid("stu"), createdAt: new Date().toISOString() };
-        record.name = name; record.rollNo = rollNo; record.className = className; record.feeStatus = normalizeFeeStatus(normalizedRow.feeStatus); record.updatedAt = new Date().toISOString();
-        const idx = DB.students.findIndex(s=>s.id===record.id); if(idx>=0) DB.students[idx] = record; else DB.students.push(record); imported++;
-      });
-      if(imported>0){ saveDatabase(); statusEl.innerHTML = `<span class="text-[var(--ok-fg)] font-semibold">Imported ${imported} record(s).</span>` + (invalid>0? ` <span class="text-[var(--warn-fg)]">${invalid} skipped.</span>` : ""); toast(`Imported ${imported} records.`, "success"); }else{ statusEl.innerHTML = `<span class="text-[var(--warn-fg)] font-semibold">No valid records.</span>`; toast("Import failed.", "error"); }
-      renderStudentTable(); renderDashboard();
-    }catch(err){ statusEl.innerHTML = `<span class="text-[var(--warn-fg)] font-semibold">Error reading file.</span>`; toast("Could not read Excel file.", "error"); }
-    evt.target.value = "";
-  };
-  reader.readAsArrayBuffer(file);
-}
-function downloadSampleTemplate(){ const ws = XLSX.utils.aoa_to_sheet([["Name","Roll No","Class","Fee Status"],["Aarav Sharma","101","Class 10","Paid"],["Diya Verma","102","Class 10","Pending"]]); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Students"); XLSX.writeFile(wb, "Template.xlsx"); }
-
-const FEE_GRID_SOURCE = ["Paid","Pending"]; function feeStatusDisplay(v){ return v==="PAID" ? "Paid" : "Pending"; } function feeStatusFromDisplay(v){ return String(v).trim().toLowerCase()==="paid" ? "PAID" : "PENDING"; } function gridRowData(list){ return list.map(s=> [s.name, s.rollNo, s.className, feeStatusDisplay(s.feeStatus)]); } function destroyGrid(elId){ const el = document.getElementById(elId); if(el && el.jspreadsheet){ try{ el.jspreadsheet.destroy(); }catch(e){} } }
-window.__studentGridRows = []; window.__studentGridSelectedRow = null;
-function renderStudentTable(){
-  const q = (document.getElementById("student-search").value||"").trim().toLowerCase(); const wrap = document.getElementById("student-table-wrap");
-  const list = DB.students.filter(s=> !q || s.name.toLowerCase().includes(q) || s.rollNo.toLowerCase().includes(q) || s.className.toLowerCase().includes(q)).sort((a,b)=> a.className.localeCompare(b.className) || a.rollNo.localeCompare(b.rollNo, undefined, {numeric:true}));
-  document.getElementById("student-count-label").textContent = `${DB.students.length} record(s)` + (q? ` · ${list.length} matching` : "");
-  window.__studentGridRows = list; window.__studentGridSelectedRow = null; destroyGrid("student-jss");
-  if(list.length===0){ wrap.innerHTML = `<div class="empty-state">No students found.</div>`; return; }
-  wrap.innerHTML = `<div class="jss-wrap"><div id="student-jss"></div></div>`;
-  jspreadsheet(document.getElementById("student-jss"), { data: gridRowData(list), columns: [ { type:"text", title:"Name", width:220 }, { type:"text", title:"Roll No", width:110 }, { type:"text", title:"Class", width:140 }, { type:"dropdown", title:"Fee Status", width:130, source: FEE_GRID_SOURCE } ], allowInsertRow: false, allowInsertColumn: false, allowDeleteColumn: false, allowDeleteRow: false, columnSorting: false, contextMenu: false, tableOverflow: true, onselection: function(instance, x1, y1){ window.__studentGridSelectedRow = parseInt(y1,10); }, onchange: function(instance, cell, x, y, value){ handleStudentGridChange(parseInt(x,10), parseInt(y,10), value); } });
-}
-function handleStudentGridChange(x, y, value){ const row = window.__studentGridRows[y]; if(!row) return; const real = findStudent(row.id); if(!real) return; const field = ["name","rollNo","className","feeStatus"][x]; if(!field) return; if(field==="feeStatus"){ real.feeStatus = feeStatusFromDisplay(value); } else { real[field] = String(value).trim(); } real.updatedAt = new Date().toISOString(); saveDatabase(); document.getElementById("student-count-label").textContent = `${DB.students.length} record(s)`; renderDashboard(); }
-function deleteSelectedStudentRow(){ const y = window.__studentGridSelectedRow; const row = (y!==null && y!==undefined) ? window.__studentGridRows[y] : null; if(!row){ toast("Select a row first.", "warning"); return; } deleteStudent(row.id); }
-function feeBadge(status){ return status==="PAID" ? `<span class="badge badge-ok"><span class="badge-dot"></span>Paid</span>` : `<span class="badge badge-warn"><span class="badge-dot"></span>Pending</span>`; }
-function escapeHtml(str){ return String(str).replace(/[&<>"']/g, c=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c])); }
-
-function updateDashboardGreeting(){ const el = document.getElementById("dashboard-greeting"); if(!el) return; const hour = new Date().getHours(); el.textContent = (hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening") + (window.__currentUserFirstName ? `, ${window.__currentUserFirstName}` : ""); }
-function renderDashboard(){
-  const total = DB.students.length; const paid = DB.students.filter(s=>s.feeStatus==="PAID").length; const pending = total - paid; const ttCount = Object.keys(DB.timetables).filter(k=> (DB.timetables[k]||[]).length>0).length;
-  document.getElementById("kpi-total").textContent = total; document.getElementById("kpi-paid").textContent = paid; document.getElementById("kpi-pending").textContent = pending; document.getElementById("kpi-timetables").textContent = ttCount;
-  const health = document.getElementById("data-health"); health.innerHTML = `<div class="flex items-center gap-2"><i data-icon="${total>0?'check-circle-2':'alert-circle'}" class="w-4 h-4 ${total>0?'text-[var(--ok-fg)]':'text-[var(--warn-fg)]'}"></i><span>${total>0? `${total} student record(s) on file.` : "No students yet."}</span></div>` + `<div class="flex items-center gap-2"><i data-icon="${ttCount>0?'check-circle-2':'alert-circle'}" class="w-4 h-4 ${ttCount>0?'text-[var(--ok-fg)]':'text-[var(--warn-fg)]'}"></i><span>${ttCount>0? `${ttCount} class timetable(s) configured.` : "No class timetables configured yet."}</span></div>` + `<div class="flex items-center gap-2"><i data-icon="${pending===0 && total>0?'check-circle-2':'alert-circle'}" class="w-4 h-4 ${pending===0 && total>0?'text-[var(--ok-fg)]':'text-[var(--warn-fg)]'}"></i><span>${total>0 ? (pending===0? "All student fees are cleared." : `${pending} student(s) have pending fees.`) : "Fee status will appear once students are added."}</span></div>`;
-  safeIcons(); updateDashboardGreeting();
-}
-
-window.__feeGridRows = []; window.__feeGridSelectedRow = null;
-function renderFeeTable(){
-  const q = (document.getElementById("fee-search").value||"").trim().toLowerCase(); const wrap = document.getElementById("fee-table-wrap"); const list = DB.students.filter(s=> !q || s.name.toLowerCase().includes(q) || s.rollNo.toLowerCase().includes(q) || s.className.toLowerCase().includes(q)); window.__feeGridRows = list; window.__feeGridSelectedRow = null; destroyGrid("fee-jss");
-  if(list.length===0){ wrap.innerHTML = `<div class="empty-state">No matching students</div>`; return; }
-  wrap.innerHTML = `<div class="jss-wrap"><div id="fee-jss"></div></div>`; jspreadsheet(document.getElementById("fee-jss"), { data: gridRowData(list), columns: [ { type:"text", title:"Name", width:220 }, { type:"text", title:"Roll No", width:110 }, { type:"text", title:"Class", width:140 }, { type:"dropdown", title:"Fee Status", width:130, source: FEE_GRID_SOURCE } ], allowInsertRow: false, allowInsertColumn: false, allowDeleteColumn: false, allowDeleteRow: false, columnSorting: false, contextMenu: false, tableOverflow: true, onselection: function(instance, x1, y1){ window.__feeGridSelectedRow = parseInt(y1,10); }, onchange: function(instance, cell, x, y, value){ const row = window.__feeGridRows[y]; if(!row) return; const real = findStudent(row.id); if(!real) return; const field = ["name","rollNo","className","feeStatus"][x]; if(!field) return; if(field==="feeStatus"){ real.feeStatus = feeStatusFromDisplay(value); toast("Fee status updated.", "success"); } else { real[field] = String(value).trim(); } real.updatedAt = new Date().toISOString(); saveDatabase(); renderDashboard(); } });
-}
-function printSelectedFeeReceipt(){ const y = window.__feeGridSelectedRow; const row = (y!==null && y!==undefined) ? window.__feeGridRows[y] : null; if(!row){ toast("Select a row first.", "warning"); return; } const s = findStudent(row.id); const { jsPDF } = window.jspdf; const doc = new jsPDF(); doc.setFont("times","bold"); doc.setFontSize(18); doc.text("IDPS SCHOOL OS", 105, 20, { align:"center" }); doc.setFontSize(11); doc.setFont("times","normal"); doc.text("Cloud Edition", 105, 27, { align:"center" }); doc.setLineWidth(0.5); doc.line(20, 32, 190, 32); doc.setFontSize(14); doc.setFont("times","bold"); doc.text("FEE STATUS RECEIPT", 105, 42, { align:"center" }); doc.setFontSize(11); doc.setFont("times","normal"); doc.text(`Receipt No: RCPT-${s.rollNo}-${Date.now().toString().slice(-6)}`, 20, 55); doc.text(`Date: ${new Date().toLocaleDateString()}`, 150, 55); doc.autoTable({ startY:65, theme:"grid", styles:{font:"times", fontSize:11}, head:[["Field","Details"]], body:[["Student Name", s.name],["Roll Number", s.rollNo],["Class", s.className],["Fee Status", s.feeStatus==="PAID"?"CLEARED":"PENDING"]] }); doc.text("_____________________", 20, doc.lastAutoTable.finalY + 30); doc.text("Authorized Signature", 20, doc.lastAutoTable.finalY + 36); doc.save(`Fee_Receipt_${s.rollNo}.pdf`); toast("Receipt generated.", "success"); }
-
-let ttRows = []; let ttCurrentClass = "";
-function populateClassList(){ document.getElementById("tt-class-list").innerHTML = Array.from(new Set(DB.students.map(s=>s.className).concat(Object.keys(DB.timetables)))).sort().map(c=>`<option value="${escapeHtml(c)}">`).join(""); }
-function loadTimetableForClass(){ ttCurrentClass = document.getElementById("tt-class-select").value.trim(); const existing = DB.timetables[ttCurrentClass]; ttRows = existing ? JSON.parse(JSON.stringify(existing)) : []; renderTimetableRowsUI(); renderTimetablePreview(); }
-function addTimetableRow(){ ttRows.push({date:"",day:"",subject:"",startTime:"",endTime:""}); renderTimetableRowsUI(); }
-function removeTimetableRow(idx){ ttRows.splice(idx,1); renderTimetableRowsUI(); }
-function clearTimetableRows(){ ttRows = []; renderTimetableRowsUI(); }
-function updateTimetableRowField(idx, field, value){ ttRows[idx][field] = value; if(field==="date" && value){ const d = new Date(value); if(!isNaN(d)) ttRows[idx].day = d.toLocaleDateString(undefined,{weekday:"long"}); } }
-function renderTimetableRowsUI(){ const wrap = document.getElementById("tt-rows"); if(ttRows.length===0){ wrap.innerHTML = `<div class="text-[13px] text-center py-6">Select a class and add exam rows.</div>`; return; } wrap.innerHTML = ttRows.map((r,idx)=>`<div class="grid grid-cols-2 sm:grid-cols-6 gap-2 items-end card p-3"><div class="sm:col-span-1"><label class="field-label">Date</label><input type="date" class="input" value="${r.date||''}" onchange="updateTimetableRowField(${idx},'date',this.value)"></div><div class="sm:col-span-1"><label class="field-label">Day</label><input class="input" value="${escapeHtml(r.day||'')}" onchange="updateTimetableRowField(${idx},'day',this.value)"></div><div class="sm:col-span-2"><label class="field-label">Subject</label><input class="input" value="${escapeHtml(r.subject||'')}" onchange="updateTimetableRowField(${idx},'subject',this.value)"></div><div class="sm:col-span-1"><label class="field-label">Start</label><input type="time" class="input" value="${r.startTime||''}" onchange="updateTimetableRowField(${idx},'startTime',this.value)"></div><div class="sm:col-span-1 flex items-end gap-2"><div class="flex-1"><label class="field-label">End</label><input type="time" class="input" value="${r.endTime||''}" onchange="updateTimetableRowField(${idx},'endTime',this.value)"></div><button class="btn-ghost-icon flex-shrink-0" onclick="removeTimetableRow(${idx})"><i data-icon="x" class="w-4 h-4"></i></button></div></div>`).join(""); safeIcons(); }
-function saveTimetable(){ const cls = document.getElementById("tt-class-select").value.trim(); if(!cls){ toast("Enter a class name.", "error"); return; } const valid = ttRows.filter(r=> r.date && r.subject && r.startTime && r.endTime); if(valid.length===0){ toast("Add complete exam rows.", "error"); return; } valid.sort((a,b)=> new Date(a.date+"T"+a.startTime) - new Date(b.date+"T"+b.startTime)); DB.timetables[cls] = valid; saveDatabase(); toast(`Timetable saved.`, "success"); populateClassList(); renderTimetablePreview(); renderDashboard(); }
-function renderTimetablePreview(){ const wrap = document.getElementById("tt-preview"); const rows = ttCurrentClass ? DB.timetables[ttCurrentClass] : null; if(!ttCurrentClass){ wrap.innerHTML = `<div class="empty-state">No class selected</div>`; return; } if(!rows || rows.length===0){ wrap.innerHTML = `<div class="empty-state">No timetable configured</div>`; return; } wrap.innerHTML = `<table class="data-table"><thead><tr><th>Date</th><th>Day</th><th>Subject</th><th>Start</th><th>End</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${formatDate(r.date)}</td><td>${escapeHtml(r.day)}</td><td>${escapeHtml(r.subject)}</td><td>${r.startTime}</td><td>${r.endTime}</td></tr>`).join("")}</tbody></table>`; staggerReveal("#tt-preview tbody tr"); }
-function formatDate(d){ if(!d) return ""; const dt = new Date(d); return isNaN(dt) ? d : dt.toLocaleDateString(undefined,{day:"2-digit",month:"short",year:"numeric"}); }
-
-function renderAdmitCardResults(){ const q = document.getElementById("ac-search").value.trim().toLowerCase(); const wrap = document.getElementById("ac-results"); if(!q){ wrap.innerHTML = ""; return; } const list = DB.students.filter(s=> s.name.toLowerCase().includes(q) || s.rollNo.toLowerCase().includes(q)).slice(0,8); if(list.length===0){ wrap.innerHTML = `<div>No matching students.</div>`; return; } wrap.innerHTML = list.map(s=>`<button onclick="document.getElementById('ac-results').innerHTML=''; document.getElementById('ac-search').value=''; renderAdmitCardPreview('${s.id}')" class="w-full text-left card p-3 flex items-center justify-between hover:border-[var(--accent-light)] transition"><div><div class="font-medium text-[13.5px]">${escapeHtml(s.name)}</div><div class="text-[12px] text-[var(--ink-soft)]">Roll ${escapeHtml(s.rollNo)} · ${escapeHtml(s.className)}</div></div>${feeBadge(s.feeStatus)}</button>`).join(""); safeIcons(); }
-function renderAdmitCardPreview(id){
-  const area = document.getElementById("ac-preview-area"); const student = findStudent(id); if(!student){ area.innerHTML = ""; return; } const feeOk = student.feeStatus === "PAID"; const timetable = DB.timetables[student.className]; const hasTimetable = timetable && timetable.length>0;
-  let statusBlock = ""; if(!feeOk){ statusBlock = `<div class="strict-block"><div class="flex items-start gap-3"><i data-icon="shield-alert" class="w-6 h-6 text-[var(--warn-fg)]"></i><div><h3 class="font-display text-[17px] font-semibold text-[var(--warn-fg)]">Admit Card Blocked</h3><p class="text-[13.5px] mt-1">Fees are pending for ${escapeHtml(student.name)}.</p><button class="btn-secondary mt-3" onclick="navigate('fees')">Go to Fees</button></div></div></div>`; } else if(!hasTimetable){ statusBlock = `<div class="strict-block"><div class="flex items-start gap-3"><i data-icon="calendar-x" class="w-6 h-6 text-[var(--warn-fg)]"></i><div><h3 class="text-[13.5px] mt-1">No exam timetable for ${escapeHtml(student.className)}.</p><button class="btn-secondary mt-3" onclick="navigate('timetable')">Go to Timetable Hub</button></div></div></div>`; } else { statusBlock = `<div class="strict-ok"><div class="flex items-start gap-3"><i data-icon="badge-check" class="w-6 h-6 text-[var(--ok-fg)]"></i><div><h3 class="font-display text-[17px] font-semibold text-[var(--ok-fg)]">Eligibility Verified</h3><p class="text-[13.5px] mt-1">Fees cleared and timetable available.</p></div></div></div>`; }
-  area.innerHTML = `<div class="card p-5 mt-4 mb-4"><div class="font-display text-[17px] font-semibold mb-4">${escapeHtml(student.name)}</div>${statusBlock}</div> ${hasTimetable? `<div class="card p-5 mb-4"><table class="data-table"><thead><tr><th>Date</th><th>Day</th><th>Subject</th><th>Start</th><th>End</th></tr></thead><tbody>${timetable.map(r=>`<tr><td>${formatDate(r.date)}</td><td>${escapeHtml(r.day)}</td><td>${escapeHtml(r.subject)}</td><td>${r.startTime}</td><td>${r.endTime}</td></tr>`).join("")}</tbody></table></div>` : ""} <button class="btn-primary" ${feeOk && hasTimetable ? "" : "disabled"} onclick="generateAdmitCardPDF('${student.id}')">Generate PDF</button>`; safeIcons();
-}
-function generateAdmitCardPDF(id){
-  const student = findStudent(id); if(!student || student.feeStatus !== "PAID" || !DB.timetables[student.className]) return toast("Blocked.", "error");
-  const timetable = DB.timetables[student.className]; const { jsPDF } = window.jspdf; const doc = new jsPDF();
-  doc.setFont("times","bold"); doc.setFontSize(18); doc.text("IDPS SCHOOL OS", 105, 20, { align:"center" }); doc.setFontSize(14); doc.text("EXAMINATION ADMIT CARD", 105, 41, { align:"center" }); doc.autoTable({ startY:50, theme:"grid", styles:{font:"times"}, head:[["Field","Details"]], body:[["Name", student.name],["Roll No", student.rollNo],["Class", student.className]] }); doc.autoTable({ startY: doc.lastAutoTable.finalY + 15, theme:"grid", styles:{font:"times", fontSize:10.5}, head:[["Date","Day","Subject","Start","End"]], body: timetable.map(r=>[formatDate(r.date), r.day, r.subject, r.startTime, r.endTime]) }); doc.save(`Admit_Card_${student.rollNo}.pdf`); toast("Generated.", "success");
-}
-
-let msRows = []; let msCurrentStudentId = null; const GRADE_BANDS = [{min:90,grade:"A+"},{min:80,grade:"A"},{min:70,grade:"B+"},{min:60,grade:"B"},{min:50,grade:"C"},{min:40,grade:"D"},{min:0,grade:"F"}]; function computeGrade(pct){ for(const b of GRADE_BANDS) if(pct>=b.min) return b.grade; return "F"; }
-function renderMarksheetResults(){ const q = document.getElementById("ms-search").value.trim().toLowerCase(); const wrap = document.getElementById("ms-results"); if(!q){ wrap.innerHTML = ""; return; } const list = DB.students.filter(s=> s.name.toLowerCase().includes(q) || s.rollNo.toLowerCase().includes(q)).slice(0,8); if(list.length===0){ wrap.innerHTML = `<div>No matching students.</div>`; return; } wrap.innerHTML = list.map(s=>`<button onclick="msCurrentStudentId='${s.id}'; document.getElementById('ms-results').innerHTML=''; document.getElementById('ms-search').value=''; msRows = DB.marks['${s.id}'] ? JSON.parse(JSON.stringify(DB.marks['${s.id}'])) : []; renderMarksheetEditor();" class="w-full text-left card p-3 flex items-center justify-between hover:border-[var(--accent-light)] transition"><div><div class="font-medium text-[13.5px]">${escapeHtml(s.name)}</div><div class="text-[12px] text-[var(--ink-soft)]">Roll ${escapeHtml(s.rollNo)} · ${escapeHtml(s.className)}</div></div><i data-icon="chevron-right" class="w-4 h-4"></i></button>`).join(""); safeIcons(); }
-function addMarksRow(){ msRows.push({subject:"", maxMarks:100, obtained:0}); renderMarksheetEditor(); } function removeMarksRow(idx){ msRows.splice(idx,1); renderMarksheetEditor(); } function updateMarksField(idx, field, value){ if(field==="subject") msRows[idx][field]=value; else msRows[idx][field]=Math.max(0, Number(value)||0); renderMarksheetSummary(); }
-function computeMarksTotals(){ const totalMax = msRows.reduce((a,r)=>a+(Number(r.maxMarks)||0),0); const totalObtained = msRows.reduce((a,r)=>a+(Number(r.obtained)||0),0); const pct = totalMax>0 ? (totalObtained/totalMax*100) : 0; return { totalMax, totalObtained, pct, grade: computeGrade(pct), passed: pct>=40 }; }
-function renderMarksheetEditor(){
-  const area = document.getElementById("ms-editor-area"); if(!msCurrentStudentId){ area.innerHTML = ""; return; } const student = findStudent(msCurrentStudentId);
-  area.innerHTML = `<div class="card p-5"><div class="flex items-center justify-between flex-wrap gap-3 mb-4"><div><div class="font-display text-[17px] font-semibold">${escapeHtml(student.name)}</div></div><div class="flex gap-2"><button class="btn-secondary" onclick="addMarksRow()">Add subject</button><button class="btn-primary" onclick="saveMarks()">Save marks</button></div></div><div id="ms-rows" class="space-y-2 mb-5"></div><div id="ms-summary" class="card p-4"></div><button class="btn-primary mt-4" onclick="generateMarksheetPDF()">Generate Marksheet PDF</button></div>`;
-  const wrap = document.getElementById("ms-rows"); wrap.innerHTML = msRows.map((r,idx)=>`<div class="grid grid-cols-2 sm:grid-cols-4 gap-2 items-end card p-3"><div class="sm:col-span-2"><label class="field-label">Subject</label><input class="input" value="${escapeHtml(r.subject)}" onchange="updateMarksField(${idx},'subject',this.value)"></div><div><label class="field-label">Max Marks</label><input type="number" min="1" class="input" value="${r.maxMarks}" onchange="updateMarksField(${idx},'maxMarks',this.value)"></div><div class="flex items-end gap-2"><div class="flex-1"><label class="field-label">Obtained</label><input type="number" min="0" class="input" value="${r.obtained}" onchange="updateMarksField(${idx},'obtained',this.value)"></div><button class="btn-ghost-icon flex-shrink-0" onclick="removeMarksRow(${idx})"><i data-icon="x" class="w-4 h-4"></i></button></div></div>`).join("");
-  renderMarksheetSummary(); safeIcons();
-}
-function renderMarksheetSummary(){ const el = document.getElementById("ms-summary"); if(!el) return; const { totalMax, totalObtained, pct, grade, passed } = computeMarksTotals(); el.innerHTML = `<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center"><div><div class="kpi-label">Total</div><div class="text-[20px] font-display font-semibold">${totalObtained}/${totalMax}</div></div><div><div class="kpi-label">Percentage</div><div class="text-[20px] font-display font-semibold">${pct.toFixed(1)}%</div></div><div><div class="kpi-label">Grade</div><div class="text-[20px] font-display font-semibold">${grade}</div></div><div><div class="kpi-label">Result</div><div class="text-[20px] font-display font-semibold ${passed?'text-[var(--ok-fg)]':'text-[var(--warn-fg)]'}">${passed?"PASS":"FAIL"}</div></div></div>`; }
-function saveMarks(){ DB.marks[msCurrentStudentId] = msRows; saveDatabase(); toast("Marks saved.", "success"); }
-function generateMarksheetPDF(){
-  const student = findStudent(msCurrentStudentId); if(msRows.length===0) return toast("Add marks first.", "error"); const { totalMax, totalObtained, pct, grade, passed } = computeMarksTotals(); const { jsPDF } = window.jspdf; const doc = new jsPDF();
-  doc.setFont("times","bold"); doc.setFontSize(18); doc.text("IDPS SCHOOL OS", 105, 20, { align:"center" }); doc.setFontSize(14); doc.text("STATEMENT OF MARKS", 105, 41, { align:"center" }); doc.autoTable({ startY:50, theme:"grid", styles:{font:"times"}, body:[["Student Name", student.name],["Roll Number", student.rollNo],["Class", student.className]] }); doc.autoTable({ startY: doc.lastAutoTable.finalY + 10, theme:"grid", styles:{font:"times"}, head:[["Subject","Max Marks","Obtained Marks"]], body: msRows.map(r=>[r.subject, r.maxMarks, r.obtained]) }); doc.autoTable({ startY: doc.lastAutoTable.finalY + 8, theme:"grid", styles:{font:"times", fontStyle:"bold"}, body:[["Total", `${totalObtained} / ${totalMax}`],["Percentage", `${pct.toFixed(2)}%`],["Grade", grade],["Result", passed?"PASS":"FAIL"]] }); doc.save(`Marksheet_${student.rollNo}.pdf`); toast("Marksheet generated.", "success");
-}
-
-function loadAiSettings(){ try{ return JSON.parse(localStorage.getItem("idps_ai_settings") || "null") || { provider:"gemini", apiKey:"" }; }catch(e){ return { provider:"gemini", apiKey:"" }; } }
-function saveAiSettings(){ const provider = document.getElementById("ai-provider").value; const apiKey = document.getElementById("ai-key").value.trim(); localStorage.setItem("idps_ai_settings", JSON.stringify({ provider, apiKey })); const statusEl = document.getElementById("ai-settings-status"); statusEl.textContent = "Saved."; setTimeout(()=>{ statusEl.textContent = ""; }, 2500); toast("AI settings saved.", "success"); }
-function populateAiSettingsForm(){ const s = loadAiSettings(); document.getElementById("ai-provider").value = s.provider || "gemini"; document.getElementById("ai-key").value = s.apiKey || ""; }
-function exportBackup(){ const blob = new Blob([JSON.stringify(DB, null, 2)], { type:"application/json" }); const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "idps_school_os_backup.json"; a.click(); URL.revokeObjectURL(url); toast("Backup exported.", "success"); }
-function confirmWipeData(){ openModal(`<div class="p-6"><h3 class="font-display text-[18px] font-semibold mb-2 text-[var(--warn-fg)]">Erase all cloud data?</h3><div class="flex justify-end gap-2 mt-6"><button class="btn-secondary" onclick="closeModal()">Cancel</button><button class="btn-danger" onclick="DB = defaultDB(); saveDatabase(); closeModal(); navigate('dashboard'); toast('Cloud data erased.', 'success');">Erase everything</button></div></div>`); }
-  /* ---------------- IDPS AI CHAT WIDGET (Fixed for AQ keys & Adjacency) ---------------- */
+                          /* ---------------- IDPS AI CHAT WIDGET (Auto-Detect Model) ---------------- */
 let aiChatHistory = [];
 function toggleAiPanel(){
   const panel = document.getElementById("ai-panel");
@@ -661,7 +527,24 @@ async function sendAiMessage(){
 async function callAiProvider(settings, userMessage){
   const systemPrompt = buildSchoolContext();
   if(settings.provider === "gemini"){
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${encodeURIComponent(settings.apiKey.trim())}`;
+    
+    // 1. Google se zinda models ki list maango (Auto-detect)
+    const listUrl = `https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(settings.apiKey.trim())}`;
+    const listRes = await fetch(listUrl, { headers: { "x-goog-api-key": settings.apiKey.trim() } });
+    const listData = await listRes.json();
+    if(!listRes.ok) throw new Error(listData.error?.message || "Failed to fetch models list from Google.");
+
+    // 2. Jo model chal raha hai, use automatically chun lo
+    let modelName = "models/gemini-1.5-flash"; 
+    if(listData && listData.models){
+       const available = listData.models.filter(m => m.supportedGenerationMethods && m.supportedGenerationMethods.includes("generateContent") && m.name.includes("gemini"));
+       const flashModel = available.find(m => m.name.includes("flash"));
+       if(flashModel) modelName = flashModel.name;
+       else if(available.length > 0) modelName = available[0].name;
+    }
+
+    // 3. Sahi model ke sath chat bhejo
+    const url = `https://generativelanguage.googleapis.com/v1beta/${modelName}:generateContent?key=${encodeURIComponent(settings.apiKey.trim())}`;
     const historyContents = aiChatHistory.filter(m=>m.role!=="system-note").map(m=>({
       role: m.role === "assistant" ? "model" : "user",
       parts: [{text: m.content}]
@@ -684,6 +567,7 @@ async function callAiProvider(settings, userMessage){
     }
     const data = await res.json();
     return data?.candidates?.[0]?.content?.parts?.[0]?.text || "(No response text returned.)";
+    
   } else {
     const messages = [ { role:"system", content: systemPrompt }, ...aiChatHistory.filter(m=>m.role!=="system-note").map(m=>({ role:m.role, content:m.content })) ];
     const res = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -695,8 +579,8 @@ async function callAiProvider(settings, userMessage){
     const data = await res.json();
     return data?.choices?.[0]?.message?.content || "(No response text returned.)";
   }
-}
-  function navigate(view){
+    }
+          function navigate(view){
   const outgoing = document.querySelector(".view.active");
   function performSwitch(){
     document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
