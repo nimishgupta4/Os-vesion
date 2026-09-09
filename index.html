@@ -16,21 +16,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --ink:#1b2333; --ink-soft:#5b6577; --ink-faint:#94a0b3; --bg:#f5f6f2;
-    --panel:#ffffff; --line:#e6e4dc; --accent:#3730a3; --accent-light:#6366f1;
-    --gold:#b8903f; --gold-light:#e4c179;
-    --ok-bg:#e9f7f1; --ok-fg:#0f7a54; --ok-line:#bfe9d6;
-    --warn-bg:#fdedec; --warn-fg:#b5342a; --warn-line:#f4c7c2;
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{ background:var(--bg); color:var(--ink); font-family:'Inter',system-ui,sans-serif; -webkit-font-smoothing:antialiased; }
+  :root{ --ink:#1b2333; --ink-soft:#5b6577; --ink-faint:#94a0b3; --bg:#f5f6f2; --panel:#ffffff; --line:#e6e4dc; --accent:#3730a3; --accent-light:#6366f1; --gold:#b8903f; --gold-light:#e4c179; --ok-bg:#e9f7f1; --ok-fg:#0f7a54; --ok-line:#bfe9d6; --warn-bg:#fdedec; --warn-fg:#b5342a; --warn-line:#f4c7c2; }
+  *{box-sizing:border-box} html,body{height:100%} body{ background:var(--bg); color:var(--ink); font-family:'Inter',system-ui,sans-serif; -webkit-font-smoothing:antialiased; }
   .font-display{ font-family:'Fraunces',serif; letter-spacing:-.01em; }
-  ::-webkit-scrollbar{width:10px;height:10px}
-  ::-webkit-scrollbar-track{background:transparent}
-  ::-webkit-scrollbar-thumb{background:#d9d6c9;border-radius:99px}
-  ::-webkit-scrollbar-thumb:hover{background:var(--accent-light)}
+  ::-webkit-scrollbar{width:10px;height:10px} ::-webkit-scrollbar-track{background:transparent} ::-webkit-scrollbar-thumb{background:#d9d6c9;border-radius:99px} ::-webkit-scrollbar-thumb:hover{background:var(--accent-light)}
   .seal{ width:44px;height:44px;border-radius:12px; background:linear-gradient(150deg, var(--gold-light), var(--gold) 65%, #8a6a26 100%); display:flex;align-items:center;justify-content:center; box-shadow:0 1px 0 rgba(255,255,255,.4) inset, 0 8px 18px -8px rgba(184,144,63,.55); color:#241c07;font-weight:700;font-family:'Fraunces',serif;font-size:18px; }
   .sidebar{ background:var(--panel); border-right:1px solid var(--line); }
   .nav-item{ display:flex;align-items:center;gap:12px; padding:10.5px 14px;border-radius:10px; color:var(--ink-soft); font-size:14px; font-weight:500; transition:background .15s ease, color .15s ease; position:relative; cursor:pointer;}
@@ -40,87 +29,48 @@
   .nav-item svg{width:17px;height:17px;flex-shrink:0}
   .card{ background:var(--panel); border:1px solid var(--line); border-radius:16px; box-shadow:0 1px 2px rgba(20,20,10,.03), 0 12px 30px -22px rgba(20,20,10,.25); }
   .kpi-card{ background:var(--panel); border:1px solid var(--line); border-top:3px solid var(--accent-light); border-radius:14px; padding:18px 20px; position:relative; overflow:hidden; box-shadow:0 1px 2px rgba(20,20,10,.03), 0 14px 30px -24px rgba(20,20,10,.3); }
-  .kpi-card.kpi-ok{ border-top-color:#22c58f; }
-  .kpi-card.kpi-warn{ border-top-color:#e0554a; }
-  .kpi-card.kpi-gold{ border-top-color:var(--gold); }
-  .kpi-label{ font-size:12.5px; color:var(--ink-soft); font-weight:600; }
-  .kpi-value{ font-family:'Fraunces',serif; font-size:31px; font-weight:600; color:var(--ink); margin-top:3px; }
+  .kpi-card.kpi-ok{ border-top-color:#22c58f; } .kpi-card.kpi-warn{ border-top-color:#e0554a; } .kpi-card.kpi-gold{ border-top-color:var(--gold); }
+  .kpi-label{ font-size:12.5px; color:var(--ink-soft); font-weight:600; } .kpi-value{ font-family:'Fraunces',serif; font-size:31px; font-weight:600; color:var(--ink); margin-top:3px; }
   .btn-primary{ background:linear-gradient(135deg, var(--accent-light), var(--accent)); color:#fff; font-weight:600; font-size:14px; padding:10px 18px; border-radius:10px; display:inline-flex; align-items:center; gap:8px; transition:filter .15s ease, transform .1s ease; border:1px solid rgba(0,0,0,.04); box-shadow:0 8px 20px -10px rgba(55,48,163,.55); cursor:pointer;}
-  .btn-primary:hover{ filter:brightness(1.06); }
-  .btn-primary:active{ transform:translateY(1px); }
-  .btn-primary:disabled{ opacity:.42; cursor:not-allowed; filter:none; }
+  .btn-primary:hover{ filter:brightness(1.06); } .btn-primary:active{ transform:translateY(1px); } .btn-primary:disabled{ opacity:.42; cursor:not-allowed; filter:none; }
   .btn-secondary{ background:#fff; color:var(--ink); font-weight:600; font-size:14px; padding:10px 18px; border-radius:10px; border:1px solid var(--line); display:inline-flex; align-items:center; gap:8px; transition:border-color .15s ease, background .15s ease; cursor:pointer;}
   .btn-secondary:hover{ border-color:var(--accent-light); background:#f7f7fc; }
   .btn-danger{ background:linear-gradient(135deg,#e0554a,#b5342a); color:#fff; font-weight:600; font-size:13px; padding:8px 14px; border-radius:9px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;}
-  .btn-danger:hover{ filter:brightness(1.08); }
   .btn-ghost-icon{ width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;border:1px solid var(--line); color:var(--ink-soft); background:#fff; transition:border-color .15s ease, color .15s ease; cursor:pointer;}
   .btn-ghost-icon:hover{ border-color:var(--accent-light); color:var(--accent); }
   .input{ width:100%; border:1px solid var(--line); border-radius:10px; padding:9px 12px; font-size:14px; background:#fff; color:var(--ink); transition:border-color .15s ease, box-shadow .15s ease; }
   .input:focus{ outline:none; border-color:var(--accent-light); box-shadow:0 0 0 3px rgba(99,102,241,.13); }
   label.field-label{ font-size:12.5px; font-weight:600; color:var(--ink-soft); margin-bottom:5px; display:block; }
   .badge{ display:inline-flex; align-items:center; gap:6px; padding:4px 11px; border-radius:99px; font-size:12.5px; font-weight:600; border:1px solid transparent; }
-  .badge-ok{ background:var(--ok-bg); color:var(--ok-fg); border-color:var(--ok-line); }
-  .badge-warn{ background:var(--warn-bg); color:var(--warn-fg); border-color:var(--warn-line); }
-  .badge-dot{ width:6px;height:6px;border-radius:50%;background:currentColor; }
+  .badge-ok{ background:var(--ok-bg); color:var(--ok-fg); border-color:var(--ok-line); } .badge-warn{ background:var(--warn-bg); color:var(--warn-fg); border-color:var(--warn-line); } .badge-dot{ width:6px;height:6px;border-radius:50%;background:currentColor; }
   table.data-table{ width:100%; border-collapse:separate; border-spacing:0; font-size:14px; }
   table.data-table thead th{ text-align:left; font-size:11.5px; font-weight:700; color:var(--ink-soft); letter-spacing:.02em; padding:10px 14px; border-bottom:1px solid var(--line); background:#faf9f6; }
-  table.data-table thead th:first-child{ border-top-left-radius:10px }
-  table.data-table thead th:last-child{ border-top-right-radius:10px }
   table.data-table tbody td{ padding:12px 14px; border-bottom:1px solid #f0efe8; color:var(--ink); }
   table.data-table tbody tr:hover{ background:#faf9f6; }
-  table.data-table tbody tr:last-child td{ border-bottom:none }
-  .view{ display:none; }
-  .view.active{ display:block; }
+  .view{ display:none; } .view.active{ display:block; }
   .modal-backdrop{ position:fixed; inset:0; background:rgba(20,22,15,.4); backdrop-filter:blur(2px); display:flex; align-items:center; justify-content:center; z-index:70; padding:16px; }
   .modal-panel{ background:#fff; border-radius:16px; max-width:560px; width:100%; max-height:88vh; overflow-y:auto; box-shadow:0 30px 60px -20px rgba(0,0,0,.3); }
   #toast-stack{ position:fixed; top:18px; right:18px; z-index:90; display:flex; flex-direction:column; gap:10px; }
   .toast{ min-width:280px; max-width:360px; background:#20263a; color:#f2f4f9; border-radius:11px; padding:13px 16px; display:flex; align-items:flex-start; gap:10px; font-size:13.5px; box-shadow:0 14px 30px -10px rgba(0,0,0,.35); }
-  .toast.success{ border-left:3px solid #22c58f; }
-  .toast.error{ border-left:3px solid #e0554a; }
-  .toast.warning{ border-left:3px solid var(--gold-light); }
-  .toast.info{ border-left:3px solid #6366f1; }
+  .toast.success{ border-left:3px solid #22c58f; } .toast.error{ border-left:3px solid #e0554a; }
   .empty-state{ text-align:center; padding:52px 24px; color:var(--ink-soft); }
   .empty-state svg{ width:36px; height:36px; margin:0 auto 14px auto; color:var(--ink-faint); }
   .jss-wrap{ border:1px solid var(--line); border-radius:10px; overflow:hidden; }
   .jss-wrap .jexcel_container{ font-family:'Inter',system-ui,sans-serif; }
-  .jss-wrap table.jexcel{ border-collapse:collapse; font-size:13.5px; }
   .jss-wrap table.jexcel td{ border-color:#f0efe8; padding:8px 10px; }
-  .jss-wrap table.jexcel thead td{ background:#faf9f6; font-weight:700; font-size:11.5px; color:var(--ink-soft); letter-spacing:.02em; text-transform:none; }
-  .jss-wrap .jexcel_content{ overflow-x:auto; }
+  .jss-wrap table.jexcel thead td{ background:#faf9f6; font-weight:700; font-size:11.5px; color:var(--ink-soft); }
   .grid-toolbar{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
   .strict-block{ border:1px solid var(--warn-line); background:var(--warn-bg); border-radius:14px; padding:24px; }
   .strict-ok{ border:1px solid var(--ok-line); background:var(--ok-bg); border-radius:14px; padding:24px; }
   #mobile-overlay{ position:fixed; inset:0; background:rgba(20,22,15,.35); z-index:39; }
   @media (min-width:1024px){ #sidebar{ position:relative; transform:none !important; } }
-  @media (max-width:1023px){
-    #sidebar{ position:fixed; top:0; bottom:0; left:0; width:270px; z-index:40; transform:translateX(-100%); transition:transform .25s ease; }
-    #sidebar.open{ transform:translateX(0); }
-  }
-  @media print{ #sidebar,#topbar,#toast-stack,#ai-widget,.no-print{ display:none !important } #main-scroll{ margin:0 !important; padding:0 !important; } }
-  #auth-screen{
-    position:fixed; inset:0; z-index:100; display:flex; align-items:center; justify-content:center;
-    background: radial-gradient(ellipse 700px 420px at 12% 8%, rgba(99,102,241,.10), transparent 60%), radial-gradient(ellipse 700px 460px at 92% 92%, rgba(184,144,63,.12), transparent 60%), var(--bg);
-    padding:20px;
-  }
+  @media (max-width:1023px){ #sidebar{ position:fixed; top:0; bottom:0; left:0; width:270px; z-index:40; transform:translateX(-100%); transition:transform .25s ease; } #sidebar.open{ transform:translateX(0); } }
+  #auth-screen{ position:fixed; inset:0; z-index:100; display:flex; align-items:center; justify-content:center; background: radial-gradient(ellipse 700px 420px at 12% 8%, rgba(99,102,241,.10), transparent 60%), radial-gradient(ellipse 700px 460px at 92% 92%, rgba(184,144,63,.12), transparent 60%), var(--bg); padding:20px; }
   .auth-card{ background:#fff; border:1px solid var(--line); border-radius:22px; padding:44px 40px; max-width:400px; width:100%; box-shadow:0 40px 80px -32px rgba(20,20,10,.35); text-align:center; }
-  .google-btn{
-    width:100%; display:flex; align-items:center; justify-content:center; gap:10px;
-    background:#fff; border:1px solid var(--line); border-radius:11px; padding:12px 16px;
-    font-weight:600; font-size:14.5px; color:var(--ink); transition:box-shadow .15s ease, border-color .15s ease; cursor:pointer;
-  }
+  .google-btn{ width:100%; display:flex; align-items:center; justify-content:center; gap:10px; background:#fff; border:1px solid var(--line); border-radius:11px; padding:12px 16px; font-weight:600; font-size:14.5px; color:var(--ink); transition:box-shadow .15s ease, border-color .15s ease; cursor:pointer; }
   .google-btn:hover{ border-color:var(--accent-light); box-shadow:0 8px 20px -12px rgba(55,48,163,.35); }
-  .google-btn:disabled{ opacity:.6; cursor:wait; }
-  #ai-toggle{
-    position:fixed; bottom:22px; right:22px; z-index:75; width:58px; height:58px; border-radius:50%;
-    background:linear-gradient(140deg, var(--accent-light), var(--accent));
-    display:flex; align-items:center; justify-content:center; color:#fff;
-    box-shadow:0 14px 30px -10px rgba(55,48,163,.6); cursor:pointer; border:none;
-  }
-  #ai-panel{
-    position:fixed; bottom:92px; right:22px; z-index:76; width:min(380px, calc(100vw - 32px)); height:min(560px, calc(100vh - 140px));
-    background:#fff; border-radius:18px; border:1px solid var(--line); box-shadow:0 40px 80px -30px rgba(0,0,0,.4);
-    display:none; flex-direction:column; overflow:hidden;
-  }
+  #ai-toggle{ position:fixed; bottom:22px; right:22px; z-index:75; width:58px; height:58px; border-radius:50%; background:linear-gradient(140deg, var(--accent-light), var(--accent)); display:flex; align-items:center; justify-content:center; color:#fff; box-shadow:0 14px 30px -10px rgba(55,48,163,.6); cursor:pointer; border:none; }
+  #ai-panel{ position:fixed; bottom:92px; right:22px; z-index:76; width:min(380px, calc(100vw - 32px)); height:min(560px, calc(100vh - 140px)); background:#fff; border-radius:18px; border:1px solid var(--line); box-shadow:0 40px 80px -30px rgba(0,0,0,.4); display:none; flex-direction:column; overflow:hidden; }
   #ai-panel.open{ display:flex; }
   .ai-msg{ max-width:84%; padding:9px 13px; border-radius:12px; font-size:13.5px; line-height:1.45; }
   .ai-msg.user{ align-self:flex-end; background:linear-gradient(135deg, var(--accent-light), var(--accent)); color:#fff; border-bottom-right-radius:4px; }
@@ -139,7 +89,6 @@
       <span id="google-signin-label">Continue with Google</span>
     </button>
     <div id="auth-warning" class="hidden mt-4 text-left text-[12.5px] leading-relaxed bg-[var(--warn-bg)] border border-[var(--warn-line)] text-[var(--warn-fg)] rounded-lg p-3"></div>
-    <p class="text-[11.5px] text-[var(--ink-faint)] mt-5">Your school's data is stored in your own Firebase project.</p>
   </div>
 </div>
 
@@ -148,10 +97,7 @@
   <aside id="sidebar" class="sidebar w-[270px] flex-shrink-0 flex flex-col">
     <div class="px-5 pt-6 pb-5 flex items-center gap-3 border-b border-[var(--line)]">
       <div class="seal">IS</div>
-      <div>
-        <div class="font-display font-semibold text-[15px] leading-tight">IDPS School OS</div>
-        <div class="text-[11px] text-[var(--ink-faint)] mt-0.5">Cloud Edition</div>
-      </div>
+      <div><div class="font-display font-semibold text-[15px] leading-tight">IDPS School OS</div><div class="text-[11px] text-[var(--ink-faint)] mt-0.5">Cloud Edition</div></div>
     </div>
     <nav class="flex-1 px-3 py-5 space-y-1 overflow-y-auto">
       <a class="nav-item" data-view="dashboard" onclick="navigate('dashboard')"><i data-icon="layout-dashboard"></i><span>Dashboard</span></a>
@@ -161,16 +107,11 @@
       <a class="nav-item" data-view="timetable" onclick="navigate('timetable')"><i data-icon="calendar-clock"></i><span>Timetable Hub</span></a>
       <a class="nav-item" data-view="admitcard" onclick="navigate('admitcard')"><i data-icon="badge-check"></i><span>Admit Card Engine</span></a>
       <a class="nav-item" data-view="marksheet" onclick="navigate('marksheet')"><i data-icon="graduation-cap"></i><span>Marksheet Generator</span></a>
-      <div class="pt-3 mt-3 border-t border-[var(--line)]">
-        <a class="nav-item" data-view="settings" onclick="navigate('settings')"><i data-icon="settings"></i><span>Settings</span></a>
-      </div>
+      <div class="pt-3 mt-3 border-t border-[var(--line)]"><a class="nav-item" data-view="settings" onclick="navigate('settings')"><i data-icon="settings"></i><span>Settings</span></a></div>
     </nav>
     <div class="px-4 py-4 border-t border-[var(--line)] flex items-center gap-2.5">
       <img id="user-avatar" src="" class="w-8 h-8 rounded-full hidden" alt="">
-      <div class="min-w-0 flex-1">
-        <div id="user-name" class="text-[12.5px] font-semibold truncate">—</div>
-        <div id="user-email" class="text-[11px] text-[var(--ink-faint)] truncate">—</div>
-      </div>
+      <div class="min-w-0 flex-1"><div id="user-name" class="text-[12.5px] font-semibold truncate">—</div><div id="user-email" class="text-[11px] text-[var(--ink-faint)] truncate">—</div></div>
       <button id="signout-btn" class="btn-ghost-icon flex-shrink-0" title="Sign out"><i data-icon="log-out"></i></button>
     </div>
   </aside>
@@ -179,182 +120,103 @@
     <header id="topbar" class="flex items-center justify-between px-5 lg:px-8 py-4 border-b border-[var(--line)] bg-[var(--bg)]/90 backdrop-blur sticky top-0 z-30">
       <div class="flex items-center gap-3 min-w-0">
         <button class="lg:hidden btn-ghost-icon" onclick="openSidebar()"><i data-icon="menu"></i></button>
-        <div class="min-w-0">
-          <h1 id="page-title" class="font-display text-[20px] sm:text-[22px] font-semibold leading-tight truncate">Dashboard</h1>
-          <p id="page-subtitle" class="text-[12.5px] text-[var(--ink-soft)] truncate">Overview of school operations</p>
-        </div>
-      </div>
-      <div class="flex items-center gap-3 flex-shrink-0">
-        <span id="header-date" class="hidden sm:inline text-[12.5px] text-[var(--ink-soft)]"></span>
+        <div class="min-w-0"><h1 id="page-title" class="font-display text-[20px] sm:text-[22px] font-semibold leading-tight truncate">Dashboard</h1><p id="page-subtitle" class="text-[12.5px] text-[var(--ink-soft)] truncate">Overview of school operations</p></div>
       </div>
     </header>
 
     <main id="main-scroll" class="flex-1 overflow-y-auto px-5 lg:px-8 py-6">
       <section id="view-dashboard" class="view active">
-        <div class="mb-7">
-          <h2 id="dashboard-greeting" class="font-display text-[24px] sm:text-[27px] font-semibold leading-tight">Good morning</h2>
-          <p class="text-[13.5px] text-[var(--ink-soft)] mt-1.5">Your school operations, synced live.</p>
-        </div>
+        <div class="mb-7"><h2 id="dashboard-greeting" class="font-display text-[24px] font-semibold">Good morning</h2></div>
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8" id="kpi-grid">
           <div class="kpi-card"><div class="kpi-label">Total Students</div><div class="kpi-value" id="kpi-total">0</div></div>
           <div class="kpi-card kpi-ok"><div class="kpi-label">Fees Cleared</div><div class="kpi-value" id="kpi-paid">0</div></div>
           <div class="kpi-card kpi-warn"><div class="kpi-label">Fees Pending</div><div class="kpi-value" id="kpi-pending">0</div></div>
           <div class="kpi-card kpi-gold"><div class="kpi-label">Timetables Configured</div><div class="kpi-value" id="kpi-timetables">0</div></div>
         </div>
-        <h2 class="text-[13px] font-semibold text-[var(--ink-soft)] mb-3">Quick actions</h2>
-        <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8" id="quick-actions">
-          <button onclick="navigate('admissions')" class="card p-4 text-left hover:border-[var(--accent-light)] transition"><i data-icon="user-plus" class="w-5 h-5 text-[var(--gold)] mb-2"></i><div class="text-[13.5px] font-semibold">New Admission</div></button>
-          <button onclick="navigate('fees')" class="card p-4 text-left hover:border-[var(--accent-light)] transition"><i data-icon="banknote" class="w-5 h-5 text-[var(--gold)] mb-2"></i><div class="text-[13.5px] font-semibold">Manage Fees</div></button>
-          <button onclick="navigate('timetable')" class="card p-4 text-left hover:border-[var(--accent-light)] transition"><i data-icon="calendar-plus" class="w-5 h-5 text-[var(--gold)] mb-2"></i><div class="text-[13.5px] font-semibold">Create Timetable</div></button>
-          <button onclick="navigate('admitcard')" class="card p-4 text-left hover:border-[var(--accent-light)] transition"><i data-icon="badge-check" class="w-5 h-5 text-[var(--gold)] mb-2"></i><div class="text-[13.5px] font-semibold">Generate Admit Card</div></button>
-          <button onclick="navigate('marksheet')" class="card p-4 text-left hover:border-[var(--accent-light)] transition"><i data-icon="graduation-cap" class="w-5 h-5 text-[var(--gold)] mb-2"></i><div class="text-[13.5px] font-semibold">Generate Marksheet</div></button>
-        </div>
-        <div class="card p-5">
-          <h2 class="text-[13px] font-semibold text-[var(--ink-soft)] mb-4">Data health</h2>
-          <div id="data-health" class="space-y-2 text-[13.5px]"></div>
-        </div>
+        <div class="card p-5"><h2 class="text-[13px] font-semibold text-[var(--ink-soft)] mb-4">Data health</h2><div id="data-health" class="space-y-2 text-[13.5px]"></div></div>
       </section>
 
       <section id="view-admissions" class="view">
         <div class="card p-6 sm:p-8 max-w-xl mx-auto relative overflow-hidden" id="admission-card">
           <h2 class="font-display text-[19px] font-semibold mb-1">Direct Admission Portal</h2>
-          <p class="text-[13px] text-[var(--ink-soft)] mb-6">Admit a new student directly. Their record syncs to the cloud immediately.</p>
-          <div id="admission-form-wrap" class="space-y-4">
+          <div id="admission-form-wrap" class="space-y-4 mt-6">
             <div><label class="field-label">Full name</label><input id="adm-name" class="input" placeholder="e.g. Aarav Sharma"></div>
-            <div class="grid grid-cols-2 gap-4">
-              <div><label class="field-label">Roll No</label><input id="adm-roll" class="input" placeholder="e.g. 101"></div>
-              <div><label class="field-label">Class</label><input id="adm-class" class="input" placeholder="e.g. Class 10"></div>
-            </div>
-            <div>
-              <label class="field-label">Fee Status</label>
-              <select id="adm-fee" class="input"><option value="PENDING">Pending</option><option value="PAID">Paid</option></select>
-            </div>
-            <button class="btn-primary w-full justify-center mt-2" onclick="submitAdmission()"><i data-icon="user-plus" class="w-4 h-4"></i>Admit Student</button>
+            <div class="grid grid-cols-2 gap-4"><div><label class="field-label">Roll No</label><input id="adm-roll" class="input" placeholder="e.g. 101"></div><div><label class="field-label">Class</label><input id="adm-class" class="input" placeholder="e.g. Class 10"></div></div>
+            <div><label class="field-label">Fee Status</label><select id="adm-fee" class="input"><option value="PENDING">Pending</option><option value="PAID">Paid</option></select></div>
+            <button class="btn-primary w-full justify-center mt-2" onclick="submitAdmission()">Admit Student</button>
           </div>
-          <div id="admission-success" class="absolute inset-0 bg-white flex-col items-center justify-center gap-3 hidden">
-            <div class="w-14 h-14 rounded-full bg-[var(--ok-bg)] flex items-center justify-center"><i data-icon="check-circle-2" class="w-7 h-7 text-[var(--ok-fg)]"></i></div>
-            <div class="font-display text-[18px] font-semibold">Student admitted</div>
-            <div class="text-[13px] text-[var(--ink-soft)]" id="admission-success-detail"></div>
-          </div>
+          <div id="admission-success" class="absolute inset-0 bg-white flex-col items-center justify-center gap-3 hidden"><div class="font-display text-[18px] font-semibold">Student admitted</div></div>
         </div>
       </section>
 
       <section id="view-students" class="view">
         <div class="card p-5 mb-6">
-          <div class="flex items-start justify-between gap-4 flex-wrap">
-            <div><h2 class="font-display text-[17px] font-semibold">Bulk Import Roster</h2><p class="text-[13px] text-[var(--ink-soft)] mt-1">Upload an Excel file (.xlsx or .xls) with Name, Roll No, Class, Fee Status.</p></div>
-            <button class="btn-secondary" onclick="downloadSampleTemplate()"><i data-icon="download" class="w-4 h-4"></i>Sample format</button>
-          </div>
-          <label for="excel-input" class="mt-4 flex flex-col items-center justify-center gap-2 border-2 border-dashed border-[var(--line)] rounded-xl py-8 cursor-pointer hover:border-[var(--accent-light)] transition">
-            <i data-icon="file-spreadsheet" class="w-7 h-7 text-[var(--gold)]"></i>
-            <span class="text-[13.5px] font-semibold">Click to select Excel file</span>
-            <span class="text-[12px] text-[var(--ink-soft)]">.xlsx or .xls</span>
-          </label>
-          <input id="excel-input" type="file" accept=".xlsx,.xls" class="hidden" onchange="handleExcelUpload(event)">
+          <h2 class="font-display text-[17px] font-semibold">Bulk Import Roster</h2>
+          <input id="excel-input" type="file" accept=".xlsx,.xls" class="mt-4 block w-full text-sm" onchange="handleExcelUpload(event)">
           <div id="import-status" class="mt-3 text-[13px]"></div>
         </div>
         <div class="card p-5">
-          <div class="flex items-center justify-between gap-3 flex-wrap mb-4">
-            <div><h2 class="font-display text-[17px] font-semibold">Student Database</h2><p id="student-count-label" class="text-[12.5px] text-[var(--ink-soft)] mt-0.5">0 records</p></div>
-            <div class="relative"><i data-icon="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--ink-soft)]"></i><input id="student-search" class="input pl-9 w-64" placeholder="Search name, roll no, class" oninput="renderStudentTable()"></div>
-          </div>
-          <div class="grid-toolbar">
-            <span class="text-[12px] text-[var(--ink-soft)]">Edit any cell directly — changes sync to the cloud instantly.</span>
-            <button class="btn-secondary ml-auto" style="padding:7px 12px;font-size:12.5px" onclick="deleteSelectedStudentRow()"><i data-icon="trash-2" class="w-3.5 h-3.5"></i>Delete selected row</button>
-          </div>
+          <div class="flex items-center justify-between gap-3 mb-4"><h2 class="font-display text-[17px] font-semibold">Student Database <span id="student-count-label" class="text-sm font-normal text-gray-500"></span></h2><input id="student-search" class="input w-64" placeholder="Search..." oninput="renderStudentTable()"></div>
+          <div class="grid-toolbar"><button class="btn-secondary ml-auto" onclick="deleteSelectedStudentRow()">Delete selected row</button></div>
           <div id="student-table-wrap"></div>
         </div>
       </section>
-
-      <section id="view-fees" class="view">
-        <div class="card p-5 mb-6">
-          <h2 class="font-display text-[17px] font-semibold mb-1">Search Student</h2>
-          <p class="text-[13px] text-[var(--ink-soft)] mb-3">Find a student to review or update fee status.</p>
-          <div class="relative max-w-md"><i data-icon="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--ink-soft)]"></i><input id="fee-search" class="input pl-9" placeholder="Search students…" oninput="renderFeeTable()"></div>
-        </div>
-        <div class="card p-5">
-          <div class="grid-toolbar">
-            <span class="text-[12px] text-[var(--ink-soft)]">Edit Fee Status directly in the grid — changes sync to the cloud instantly.</span>
-            <button class="btn-secondary ml-auto" style="padding:7px 12px;font-size:12.5px" onclick="printSelectedFeeReceipt()"><i data-icon="printer" class="w-3.5 h-3.5"></i>Print receipt (selected)</button>
-          </div>
-          <div id="fee-table-wrap"></div>
-        </div>
+            <section id="view-fees" class="view">
+        <div class="card p-5 mb-6"><h2 class="font-display text-[17px] font-semibold mb-3">Search Student</h2><input id="fee-search" class="input max-w-md" placeholder="Search students…" oninput="renderFeeTable()"></div>
+        <div class="card p-5"><div class="grid-toolbar"><button class="btn-secondary ml-auto" onclick="printSelectedFeeReceipt()">Print receipt</button></div><div id="fee-table-wrap"></div></div>
       </section>
 
       <section id="view-timetable" class="view">
         <div class="card p-5 mb-6">
-          <div class="flex items-end gap-3 flex-wrap mb-4">
-            <div class="flex-1 min-w-[180px]"><label class="field-label">Class</label><input id="tt-class-select" list="tt-class-list" class="input" placeholder="e.g. Class 10" oninput="loadTimetableForClass()"><datalist id="tt-class-list"></datalist></div>
-            <button class="btn-secondary" onclick="addTimetableRow()"><i data-icon="plus" class="w-4 h-4"></i>Add exam</button>
-            <button class="btn-primary" onclick="saveTimetable()"><i data-icon="save" class="w-4 h-4"></i>Save timetable</button>
-            <button class="btn-secondary" onclick="clearTimetableRows()"><i data-icon="rotate-ccw" class="w-4 h-4"></i>Clear</button>
-          </div>
+          <div class="flex items-end gap-3 flex-wrap mb-4"><div class="flex-1 min-w-[180px]"><label class="field-label">Class</label><input id="tt-class-select" list="tt-class-list" class="input" oninput="loadTimetableForClass()"><datalist id="tt-class-list"></datalist></div><button class="btn-secondary" onclick="addTimetableRow()">Add exam</button><button class="btn-primary" onclick="saveTimetable()">Save timetable</button></div>
           <div id="tt-rows" class="space-y-3"></div>
         </div>
-        <div class="card p-5"><h2 class="font-display text-[17px] font-semibold mb-3">Saved Timetable Preview</h2><div id="tt-preview" class="overflow-x-auto rounded-lg border border-[var(--line)]"></div></div>
+        <div class="card p-5"><h2 class="font-display text-[17px] font-semibold mb-3">Preview</h2><div id="tt-preview" class="overflow-x-auto rounded-lg border border-[var(--line)]"></div></div>
       </section>
 
       <section id="view-admitcard" class="view">
-        <div class="card p-5 mb-6">
-          <label class="field-label">Search student</label>
-          <div class="relative max-w-md"><i data-icon="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--ink-soft)]"></i><input id="ac-search" class="input pl-9" placeholder="Search by name or roll number…" oninput="renderAdmitCardResults()"></div>
-          <div id="ac-results" class="mt-3 space-y-2 max-h-56 overflow-y-auto"></div>
-        </div>
+        <div class="card p-5 mb-6"><label class="field-label">Search student</label><input id="ac-search" class="input max-w-md" placeholder="Search..." oninput="renderAdmitCardResults()"><div id="ac-results" class="mt-3 space-y-2"></div></div>
         <div id="ac-preview-area"></div>
       </section>
 
       <section id="view-marksheet" class="view">
-        <div class="card p-5 mb-6">
-          <label class="field-label">Search student</label>
-          <div class="relative max-w-md"><i data-icon="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--ink-soft)]"></i><input id="ms-search" class="input pl-9" placeholder="Search by name or roll number…" oninput="renderMarksheetResults()"></div>
-          <div id="ms-results" class="mt-3 space-y-2 max-h-56 overflow-y-auto"></div>
-        </div>
+        <div class="card p-5 mb-6"><label class="field-label">Search student</label><input id="ms-search" class="input max-w-md" placeholder="Search..." oninput="renderMarksheetResults()"><div id="ms-results" class="mt-3 space-y-2"></div></div>
         <div id="ms-editor-area"></div>
       </section>
 
       <section id="view-settings" class="view">
         <div class="card p-6 max-w-xl mb-6">
-          <h2 class="font-display text-[17px] font-semibold mb-1">IDPS AI Assistant</h2>
-          <p class="text-[13px] text-[var(--ink-soft)] mb-5">Connect an AI provider to power the chat assistant in the bottom-right corner. Your key is stored only in this browser's local storage.</p>
+          <h2 class="font-display text-[17px] font-semibold mb-4">IDPS AI Assistant</h2>
           <div class="space-y-4">
-            <div><label class="field-label">AI Provider</label><select id="ai-provider" class="input"><option value="gemini">Google Gemini</option><option value="openai">OpenAI (GPT)</option></select></div>
+            <div><label class="field-label">AI Provider</label><select id="ai-provider" class="input"><option value="gemini">Google Gemini</option><option value="openai">OpenAI</option></select></div>
             <div><label class="field-label">API Key</label><input id="ai-key" type="password" class="input" placeholder="Paste your API key"></div>
-            <button class="btn-primary" onclick="saveAiSettings()"><i data-icon="key" class="w-4 h-4"></i>Save AI settings</button>
-            <span id="ai-settings-status" class="text-[12.5px] text-[var(--ok-fg)] ml-2"></span>
+            <button class="btn-primary" onclick="saveAiSettings()">Save AI settings</button><span id="ai-settings-status" class="text-[12.5px] text-[var(--ok-fg)] ml-2"></span>
           </div>
         </div>
         <div class="card p-6 max-w-xl">
-          <h2 class="font-display text-[17px] font-semibold mb-1">Data Management</h2>
-          <p class="text-[13px] text-[var(--ink-soft)] mb-5">Your data lives in Firebase Firestore under your account. Export a local JSON backup any time, or erase your cloud data.</p>
-          <div class="flex flex-wrap gap-3">
-            <button class="btn-secondary" onclick="exportBackup()"><i data-icon="download" class="w-4 h-4"></i>Export backup (JSON)</button>
-            <button class="btn-danger" onclick="confirmWipeData()"><i data-icon="trash-2" class="w-4 h-4"></i>Erase cloud data</button>
-          </div>
+          <h2 class="font-display text-[17px] font-semibold mb-4">Data Management</h2>
+          <div class="flex gap-3"><button class="btn-secondary" onclick="exportBackup()">Export backup</button><button class="btn-danger" onclick="confirmWipeData()">Erase cloud data</button></div>
         </div>
       </section>
     </main>
   </div>
 </div>
 
-<button id="ai-toggle" onclick="toggleAiPanel()" title="IDPS AI Assistant"><i data-icon="message-circle" class="w-6 h-6"></i></button>
+<button id="ai-toggle" onclick="toggleAiPanel()"><i data-icon="message-circle" class="w-6 h-6"></i></button>
 <div id="ai-panel">
   <div class="flex items-center justify-between px-4 py-3 border-b border-[var(--line)]">
-    <div class="flex items-center gap-2">
-      <div class="w-8 h-8 rounded-full bg-gradient-to-br from-[var(--accent-light)] to-[var(--accent)] flex items-center justify-center text-white"><i data-icon="bot" class="w-4 h-4"></i></div>
-      <div><div class="text-[13.5px] font-semibold">IDPS AI</div><div class="text-[11px] text-[var(--ink-faint)]">School administration assistant</div></div>
-    </div>
-    <button class="btn-ghost-icon" onclick="toggleAiPanel()"><i data-icon="x" class="w-4 h-4"></i></button>
+    <div class="font-semibold text-sm">IDPS AI</div><button class="btn-ghost-icon" onclick="toggleAiPanel()"><i data-icon="x" class="w-4 h-4"></i></button>
   </div>
   <div id="ai-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-2.5"></div>
   <div class="p-3 border-t border-[var(--line)] flex items-center gap-2">
     <input id="ai-input" class="input" placeholder="Ask IDPS AI…" onkeydown="if(event.key==='Enter') sendAiMessage()">
-    <button class="btn-ghost-icon flex-shrink-0" onclick="sendAiMessage()"><i data-icon="send" class="w-4 h-4"></i></button>
+    <button class="btn-primary" onclick="sendAiMessage()">Send</button>
   </div>
 </div>
 
 <div id="toast-stack"></div>
 <div id="modal-root"></div>
-        <script>
+<script>
 const ICON_PATHS = {
   "layout-dashboard": '<rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/>',
   "user-plus": '<circle cx="9" cy="7" r="4"/><path d="M2 21v-1a6 6 0 0 1 6-6h1"/><path d="M19 8v6M22 11h-6"/>',
@@ -366,221 +228,132 @@ const ICON_PATHS = {
   "settings": '<path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/><circle cx="12" cy="12" r="3"/>',
   "log-out": '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><line x1="21" y1="12" x2="9" y2="12"/>',
   "menu": '<line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/>',
-  "upload": '<path d="M12 16V4M6 10l6-6 6 6"/><path d="M4 18v1.5A1.5 1.5 0 0 0 5.5 21h13a1.5 1.5 0 0 0 1.5-1.5V18"/>',
-  "calendar-plus": '<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/><line x1="12" y1="13" x2="12" y2="19"/><line x1="9" y1="16" x2="15" y2="16"/>',
-  "download": '<path d="M12 4v12M6 10l6 6 6-6"/><path d="M4 18v1.5A1.5 1.5 0 0 0 5.5 21h13a1.5 1.5 0 0 0 1.5-1.5V18"/>',
-  "file-spreadsheet": '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h8M8 13v6M12 13v6M16 13v6"/>',
-  "search": '<circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>',
-  "plus": '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',
-  "save": '<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/>',
-  "rotate-ccw": '<path d="M3 12a9 9 0 1 0 3-6.7"/><polyline points="3 4 3 9 8 9"/>',
-  "pencil": '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>',
-  "trash-2": '<polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>',
   "check-circle-2": '<circle cx="12" cy="12" r="10"/><path d="M8 12.5l2.5 2.5L16 9.5"/>',
   "alert-circle": '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="13"/><line x1="12" y1="16.5" x2="12" y2="16.5"/>',
-  "printer": '<path d="M6 9V3h12v6"/><rect x="4" y="9" width="16" height="8" rx="1"/><path d="M6 17v4h12v-4"/>',
   "x": '<line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/>',
-  "shield-alert": '<path d="M12 2l8 4v6c0 5-3.4 8.4-8 10-4.6-1.6-8-5-8-10V6z"/><line x1="12" y1="8" x2="12" y2="13"/><line x1="12" y1="16" x2="12" y2="16"/>',
-  "calendar-x": '<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/><line x1="9.5" y1="13.5" x2="14.5" y2="18.5"/><line x1="14.5" y1="13.5" x2="9.5" y2="18.5"/>',
-  "file-down": '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M12 12v6M9.5 15.5l2.5 2.5 2.5-2.5"/>',
-  "chevron-right": '<polyline points="9 6 15 12 9 18"/>',
-  "x-circle": '<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>',
-  "alert-triangle": '<path d="M12 3l10 18H2z"/><line x1="12" y1="9" x2="12" y2="14"/><line x1="12" y1="17" x2="12" y2="17"/>',
-  "info": '<circle cx="12" cy="12" r="10"/><line x1="12" y1="11" x2="12" y2="16"/><line x1="12" y1="7.5" x2="12" y2="7.5"/>',
   "message-circle": '<rect x="3" y="5" width="18" height="13" rx="5"/><path d="M8 21l3-3h5"/>',
-  "send": '<path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/>',
-  "bot": '<rect x="5" y="9" width="14" height="10" rx="2"/><line x1="12" y1="5" x2="12" y2="9"/><circle cx="12" cy="4" r="1"/><circle cx="9" cy="14" r="1"/><circle cx="15" cy="14" r="1"/>',
-  "key": '<circle cx="7" cy="15" r="4"/><path d="M9.8 12.2L20 2"/><path d="M15 7l3 3"/><path d="M18 4l3 3"/>',
   "dot": '<circle cx="12" cy="12" r="3"/>'
 };
-function safeIcons(){
-  try{
-    document.querySelectorAll("[data-icon]").forEach(el=>{
-      const name = el.getAttribute("data-icon");
-      const inner = ICON_PATHS[name] || ICON_PATHS.dot;
-      const cls = el.getAttribute("class") || "";
-      const svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
-      svg.setAttribute("viewBox","0 0 24 24"); svg.setAttribute("fill","none"); svg.setAttribute("stroke","currentColor");
-      svg.setAttribute("stroke-width","2"); svg.setAttribute("stroke-linecap","round"); svg.setAttribute("stroke-linejoin","round");
-      if(cls) svg.setAttribute("class", cls);
-      svg.innerHTML = inner;
-      el.replaceWith(svg);
-    });
-  }catch(e){}
-}
+function safeIcons(){ document.querySelectorAll("[data-icon]").forEach(el=>{ const n = el.getAttribute("data-icon"); el.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="${el.className}">${ICON_PATHS[n]||ICON_PATHS.dot}</svg>`; }); }
+
 const REDUCED_MOTION = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
 function gsapOK(){ return typeof gsap !== "undefined" && !REDUCED_MOTION; }
-function staggerReveal(selector, opts){ if(gsapOK()) try{ const els = document.querySelectorAll(selector); if(els.length) gsap.fromTo(els, {opacity:0, y:10}, Object.assign({opacity:1, y:0, duration:.35, stagger:.045, ease:"power2.out"}, opts||{})); }catch(e){} }
-function animateAuthCard(){ if(gsapOK()) try{ gsap.fromTo("#auth-card", {opacity:0, y:16, scale:.98}, {opacity:1, y:0, scale:1, duration:.5, ease:"power3.out"}); }catch(e){} }
-function animateAppShell(){
-  if(!gsapOK()) return;
-  try{
-    gsap.fromTo("#sidebar", {opacity:0, x:-20}, {opacity:1, x:0, duration:.45, ease:"power3.out"});
-    gsap.fromTo("#sidebar .nav-item", {opacity:0, x:-8}, {opacity:1, x:0, duration:.35, stagger:.05, delay:.1, ease:"power2.out"});
-    gsap.fromTo("#topbar", {opacity:0, y:-10}, {opacity:1, y:0, duration:.4, ease:"power3.out", delay:.05});
-  }catch(e){}
-}
-function animateKPIs(){
-  updateDashboardGreeting();
-  const ids = ["kpi-total","kpi-paid","kpi-pending","kpi-timetables"];
-  if(!gsapOK()) return;
-  try{
-    const cards = document.querySelectorAll("#kpi-grid .kpi-card");
-    if(cards.length) gsap.fromTo(cards, {opacity:0, y:16}, {opacity:1, y:0, duration:.45, stagger:.07, ease:"power3.out"});
-    ids.forEach((id,i)=>{
-      const el = document.getElementById(id);
-      if(!el) return;
-      const target = parseInt(el.textContent,10) || 0;
-      const counter = { val:0 };
-      gsap.to(counter, { val:target, duration:.8, delay:i*.07, ease:"power2.out", onUpdate:()=>{ el.textContent = Math.round(counter.val); }, onComplete:()=>{ el.textContent = target; } });
+function staggerReveal(s, o){ if(gsapOK()) try{ const e=document.querySelectorAll(s); if(e.length) gsap.fromTo(e, {opacity:0, y:10}, Object.assign({opacity:1, y:0, duration:.35, stagger:.045}, o||{})); }catch(e){} }
+function animateAuthCard(){ if(gsapOK()) try{ gsap.fromTo("#auth-card", {opacity:0, y:16, scale:.98}, {opacity:1, y:0, scale:1, duration:.5}); }catch(e){} }
+function animateAppShell(){ if(!gsapOK()) return; try{ gsap.fromTo("#sidebar", {opacity:0, x:-20}, {opacity:1, x:0, duration:.45}); gsap.fromTo("#topbar", {opacity:0, y:-10}, {opacity:1, y:0, duration:.4, delay:.05}); }catch(e){} }
+function animateKPIs(){ const ids=["kpi-total","kpi-paid","kpi-pending","kpi-timetables"]; if(!gsapOK()) return; try{ gsap.fromTo(".kpi-card", {opacity:0, y:16}, {opacity:1, y:0, duration:.45, stagger:.07}); ids.forEach((id,i)=>{ const el=document.getElementById(id); if(!el)return; const target=parseInt(el.textContent)||0; const counter={val:0}; gsap.to(counter, {val:target, duration:.8, delay:i*.07, onUpdate:()=>el.textContent=Math.round(counter.val), onComplete:()=>el.textContent=target}); }); }catch(e){} }
+function animateViewEnter(v){ if(!gsapOK()) return; try{ gsap.fromTo("#view-"+v, {opacity:0, y:12}, {opacity:1, y:0, duration:.35}); if(v==="dashboard") animateKPIs(); }catch(e){} }
+function toast(m,t="info"){ const e=document.createElement("div"); e.className="toast "+t; e.textContent=m; document.getElementById("toast-stack").appendChild(e); if(gsapOK()) gsap.fromTo(e, {opacity:0, x:24}, {opacity:1, x:0, duration:.3}); setTimeout(()=>{ if(gsapOK()) gsap.to(e, {opacity:0, x:16, duration:.2, onComplete:()=>e.remove()}); else e.remove(); }, 3800); }
+function openModal(h){ const r=document.getElementById("modal-root"); r.innerHTML=`<div class="modal-backdrop" onclick="closeModal()"><div class="modal-panel" onclick="event.stopPropagation()">${h}</div></div>`; if(gsapOK()) { gsap.fromTo(r.querySelector(".modal-backdrop"), {opacity:0}, {opacity:1, duration:.18}); gsap.fromTo(r.querySelector(".modal-panel"), {opacity:0, scale:.94, y:10}, {opacity:1, scale:1, y:0, duration:.3}); } }
+function closeModal(){ const r=document.getElementById("modal-root"); if(gsapOK()) { gsap.to(r.querySelector(".modal-panel"), {opacity:0, scale:.95, y:8, duration:.16}); gsap.to(r.querySelector(".modal-backdrop"), {opacity:0, duration:.16, onComplete:()=>r.innerHTML=""}); } else r.innerHTML=""; }
+
+function defaultDB(){ return { students: [], timetables: {}, marks: {}, settings: {} }; }
+let DB = defaultDB(); let _firestoreSave = null; function saveDatabase(){ if(_firestoreSave) _firestoreSave(DB); } function uid(p){ return p + "_" + Date.now(); }
+function rerenderActiveView(){ const a=document.querySelector(".view.active"); if(a) navigate(a.id.replace("view-","")); }
+function submitAdmission(){ const n=document.getElementById("adm-name").value, r=document.getElementById("adm-roll").value, c=document.getElementById("adm-class").value; if(!n||!r||!c) return toast("Fill all fields","error"); DB.students.push({ id:uid("stu"), name:n, rollNo:r, className:c, feeStatus:document.getElementById("adm-fee").value }); saveDatabase(); toast("Admitted","success"); document.getElementById("adm-name").value=""; }
+function handleExcelUpload(evt){ const f=evt.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=function(e){ try{ const d=new Uint8Array(e.target.result); const wb=XLSX.read(d,{type:"array"}); const rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:""}); let i=0; rows.forEach(row=>{ if(row.Name && row["Roll No"] && row.Class){ DB.students.push({id:uid("stu"), name:row.Name, rollNo:row["Roll No"], className:row.Class, feeStatus:row["Fee Status"]==="Paid"?"PAID":"PENDING"}); i++; } }); saveDatabase(); toast(`Imported ${i}`,"success"); renderStudentTable(); }catch(err){ toast("Error reading file","error"); } evt.target.value=""; }; r.readAsArrayBuffer(f); }
+  window.__studentGridRows = []; window.__studentGridSelectedRow = null;
+function renderStudentTable(){
+  const q = document.getElementById("student-search").value.toLowerCase();
+  const list = DB.students.filter(s=> s.name.toLowerCase().includes(q)); window.__studentGridRows = list;
+  document.getElementById("student-count-label").textContent = list.length + " records";
+  const wrap = document.getElementById("student-table-wrap"); wrap.innerHTML = `<div class="jss-wrap"><div id="student-jss"></div></div>`;
+  if(list.length>0){
+    jspreadsheet(document.getElementById("student-jss"), {
+      data: list.map(s=>[s.name, s.rollNo, s.className, s.feeStatus==="PAID"?"Paid":"Pending"]),
+      columns: [{type:"text",title:"Name",width:200},{type:"text",title:"Roll No",width:100},{type:"text",title:"Class",width:100},{type:"dropdown",title:"Fee",width:100,source:["Paid","Pending"]}],
+      onselection: (i,x,y)=> window.__studentGridSelectedRow = parseInt(y),
+      onchange: (i,c,x,y,v)=>{ const f=["name","rollNo","className","feeStatus"][x]; list[y][f]= f==="feeStatus"?(v==="Paid"?"PAID":"PENDING"):v; saveDatabase(); }
     });
-    gsap.fromTo("#quick-actions > button", {opacity:0, y:12}, {opacity:1, y:0, duration:.4, stagger:.05, delay:.25, ease:"power3.out"});
-  }catch(e){}
-}
-function animateViewEnter(view){ if(!gsapOK()) return; try{ const el = document.getElementById("view-"+view); if(el){ gsap.fromTo(el, {opacity:0, y:12}, {opacity:1, y:0, duration:.35, ease:"power3.out"}); if(view==="dashboard") animateKPIs(); } }catch(e){} }
-function toast(message, type){
-  type = type || "info";
-  const icons = { success:"check-circle-2", error:"x-circle", warning:"alert-triangle", info:"info" };
-  const el = document.createElement("div"); el.className = "toast " + type;
-  el.innerHTML = `<i data-icon="${icons[type]}" class="w-4 h-4 mt-0.5 flex-shrink-0"></i><div>${message}</div>`;
-  document.getElementById("toast-stack").appendChild(el); safeIcons();
-  if(gsapOK()) try{ gsap.fromTo(el, {opacity:0, x:24, scale:.96}, {opacity:1, x:0, scale:1, duration:.32, ease:"back.out(1.6)"}); }catch(e){}
-  setTimeout(()=>{ if(gsapOK()){ try{ gsap.to(el, {opacity:0, x:16, scale:.97, duration:.22, ease:"power1.in", onComplete:()=>el.remove()}); return; }catch(e){} } el.style.opacity="0"; setTimeout(()=>el.remove(), 300); }, 3800);
-}
-function openModal(innerHtml){
-  const root = document.getElementById("modal-root");
-  root.innerHTML = `<div class="modal-backdrop" onclick="if(event.target===this) closeModal()"><div class="modal-panel">${innerHtml}</div></div>`;
-  safeIcons();
-  if(gsapOK()) try{ gsap.fromTo(root.querySelector(".modal-backdrop"), {opacity:0}, {opacity:1, duration:.18}); gsap.fromTo(root.querySelector(".modal-panel"), {opacity:0, scale:.94, y:10}, {opacity:1, scale:1, y:0, duration:.3, ease:"power3.out"}); }catch(e){}
-}
-function closeModal(){
-  const root = document.getElementById("modal-root"); const panel = root.querySelector(".modal-panel"); const backdrop = root.querySelector(".modal-backdrop");
-  if(gsapOK() && panel && backdrop){ try{ gsap.to(panel, {opacity:0, scale:.95, y:8, duration:.16}); gsap.to(backdrop, {opacity:0, duration:.16, onComplete:()=>{ root.innerHTML=""; }}); return; }catch(e){} }
-  root.innerHTML = "";
-}
-                          /* ---------------- IDPS AI CHAT WIDGET (Auto-Detect Model) ---------------- */
-let aiChatHistory = [];
-function toggleAiPanel(){
-  const panel = document.getElementById("ai-panel");
-  const opening = !panel.classList.contains("open");
-  if(opening){
-    panel.classList.add("open");
-    if(aiChatHistory.length===0){ pushAiMessage("assistant", "Hi! I'm IDPS AI. Ask me about fee summaries, drafting notices, or anything school-admin related. Set your API key in Settings first."); }
-    if(gsapOK()){ try{ gsap.fromTo(panel, {opacity:0, y:16, scale:.96}, {opacity:1, y:0, scale:1, duration:.3, ease:"power3.out"}); }catch(e){} }
-  } else {
-    panel.classList.remove("open");
   }
 }
-function pushAiMessage(role, content){
-  aiChatHistory.push({ role, content });
-  const wrap = document.getElementById("ai-messages");
-  const el = document.createElement("div");
-  el.className = "ai-msg " + (role==="user" ? "user" : role==="system-note" ? "system-note" : "assistant");
-  el.textContent = content;
-  wrap.appendChild(el);
-  wrap.scrollTop = wrap.scrollHeight;
-  if(gsapOK()){ try{ gsap.fromTo(el, {opacity:0, y:8}, {opacity:1, y:0, duration:.25}); }catch(e){} }
+function deleteSelectedStudentRow(){ const y=window.__studentGridSelectedRow; if(y==null)return toast("Select a row","warning"); DB.students=DB.students.filter(s=>s.id!==window.__studentGridRows[y].id); saveDatabase(); renderStudentTable(); }
+
+window.__feeGridRows = []; window.__feeGridSelectedRow = null;
+function renderFeeTable(){
+  const list = DB.students.filter(s=> s.name.toLowerCase().includes(document.getElementById("fee-search").value.toLowerCase())); window.__feeGridRows = list;
+  const wrap = document.getElementById("fee-table-wrap"); wrap.innerHTML = `<div class="jss-wrap"><div id="fee-jss"></div></div>`;
+  if(list.length>0){
+    jspreadsheet(document.getElementById("fee-jss"), {
+      data: list.map(s=>[s.name, s.rollNo, s.className, s.feeStatus==="PAID"?"Paid":"Pending"]),
+      columns: [{type:"text",title:"Name",width:200},{type:"text",title:"Roll No",width:100},{type:"text",title:"Class",width:100},{type:"dropdown",title:"Fee",width:100,source:["Paid","Pending"]}],
+      onselection: (i,x,y)=> window.__feeGridSelectedRow = parseInt(y),
+      onchange: (i,c,x,y,v)=>{ list[y].feeStatus=v==="Paid"?"PAID":"PENDING"; saveDatabase(); toast("Fee updated","success"); }
+    });
+  }
 }
-function buildSchoolContext(){
-  const total = DB.students.length;
-  const paid = DB.students.filter(s=>s.feeStatus==="PAID").length;
-  const pending = total - paid;
-  const classes = Array.from(new Set(DB.students.map(s=>s.className))).join(", ") || "none yet";
-  const ttCount = Object.keys(DB.timetables).filter(k=>(DB.timetables[k]||[]).length>0).length;
-  return `You are IDPS AI, a helpful assistant embedded in IDPS School OS, a school administration tool. Be concise and practical. Current school snapshot: ${total} students total, ${paid} with fees cleared, ${pending} with fees pending, classes on file: ${classes}. ${ttCount} class timetable(s) configured. Help the administrator with tasks like interpreting this data, drafting notices or announcements, explaining school-admin best practices, and answering general questions. If asked to change data directly, explain that you cannot access the database yourself and the admin should use the relevant module.`;
+function printSelectedFeeReceipt(){
+  const y=window.__feeGridSelectedRow; if(y==null)return toast("Select a row","warning"); const s=window.__feeGridRows[y];
+  const doc = new window.jspdf.jsPDF(); doc.text(`Receipt for ${s.name} - Fee: ${s.feeStatus}`, 20, 20); doc.save(`receipt_${s.rollNo}.pdf`); toast("Generated","success");
+}
+
+let ttRows=[], ttClass="";
+function populateClassList(){ document.getElementById("tt-class-list").innerHTML = [...new Set(DB.students.map(s=>s.className))].map(c=>`<option value="${c}">`).join(""); }
+function loadTimetableForClass(){ ttClass=document.getElementById("tt-class-select").value; ttRows = DB.timetables[ttClass]?JSON.parse(JSON.stringify(DB.timetables[ttClass])):[]; renderTimetableRowsUI(); }
+function addTimetableRow(){ ttRows.push({date:"",subject:"",startTime:"",endTime:""}); renderTimetableRowsUI(); }
+function renderTimetableRowsUI(){ document.getElementById("tt-rows").innerHTML = ttRows.map((r,i)=>`<div class="flex gap-2 mb-2"><input type="date" value="${r.date}" onchange="ttRows[${i}].date=this.value" class="input"><input value="${r.subject}" onchange="ttRows[${i}].subject=this.value" class="input"><input type="time" value="${r.startTime}" onchange="ttRows[${i}].startTime=this.value" class="input"><button class="btn-danger" onclick="ttRows.splice(${i},1);renderTimetableRowsUI()">X</button></div>`).join(""); }
+function saveTimetable(){ DB.timetables[ttClass] = ttRows; saveDatabase(); toast("Saved","success"); }
+
+function renderAdmitCardResults(){ const q=document.getElementById("ac-search").value.toLowerCase(); document.getElementById("ac-results").innerHTML = DB.students.filter(s=>s.name.toLowerCase().includes(q)).slice(0,5).map(s=>`<div class="card p-3 cursor-pointer hover:border-indigo-500" onclick="renderAdmitCardPreview('${s.id}')">${s.name} - ${s.className}</div>`).join(""); }
+function renderAdmitCardPreview(id){ const s=DB.students.find(x=>x.id===id); if(!s)return; document.getElementById("ac-preview-area").innerHTML = `<div class="card p-5 mt-4"><h3 class="font-bold text-lg">${s.name}</h3><p>Fee: ${s.feeStatus}</p><button class="btn-primary mt-3" onclick="generateAC('${s.id}')">Download PDF</button></div>`; }
+function generateAC(id){ const s=DB.students.find(x=>x.id===id); if(s.feeStatus!=="PAID")return toast("Fee Pending","error"); const doc = new window.jspdf.jsPDF(); doc.text(`Admit Card: ${s.name}`,20,20); doc.save(`ac_${s.rollNo}.pdf`); }
+
+function renderMarksheetResults(){ const q=document.getElementById("ms-search").value.toLowerCase(); document.getElementById("ms-results").innerHTML = DB.students.filter(s=>s.name.toLowerCase().includes(q)).slice(0,5).map(s=>`<div class="card p-3 cursor-pointer hover:border-indigo-500" onclick="selectMS('${s.id}')">${s.name} - ${s.className}</div>`).join(""); }
+let msId=null, msRows=[];
+function selectMS(id){ msId=id; msRows=DB.marks[id]?JSON.parse(JSON.stringify(DB.marks[id])):[]; renderMSRows(); }
+function renderMSRows(){ document.getElementById("ms-editor-area").innerHTML = `<div class="card p-5 mt-4 flex gap-2"><button class="btn-secondary" onclick="msRows.push({sub:'',marks:0});renderMSRows()">Add Sub</button><button class="btn-primary" onclick="DB.marks[msId]=msRows;saveDatabase();toast('Saved','success')">Save Marks</button></div><div class="mt-3 space-y-2">` + msRows.map((r,i)=>`<div class="flex gap-2 card p-2"><input value="${r.sub}" onchange="msRows[${i}].sub=this.value" class="input"><input type="number" value="${r.marks}" onchange="msRows[${i}].marks=this.value" class="input"><button class="btn-danger" onclick="msRows.splice(${i},1);renderMSRows()">X</button></div>`).join("") + `</div>`; }
+
+function updateDashboardGreeting(){ const h=new Date().getHours(); document.getElementById("dashboard-greeting").textContent = (h<12?"Good morning":h<17?"Good afternoon":"Good evening")+(window.__currentUserFirstName?`, ${window.__currentUserFirstName}`:""); }
+function renderDashboard(){ updateDashboardGreeting(); const t=DB.students.length, p=DB.students.filter(s=>s.feeStatus==="PAID").length; document.getElementById("kpi-total").textContent=t; document.getElementById("kpi-paid").textContent=p; document.getElementById("kpi-pending").textContent=t-p; document.getElementById("kpi-timetables").textContent=Object.keys(DB.timetables).length; }
+  function loadAiSettings(){ try{ return JSON.parse(localStorage.getItem("idps_ai_settings")||'{"provider":"gemini","apiKey":""}'); }catch(e){return {provider:"gemini",apiKey:""};} }
+function saveAiSettings(){ localStorage.setItem("idps_ai_settings", JSON.stringify({ provider:document.getElementById("ai-provider").value, apiKey:document.getElementById("ai-key").value })); toast("Saved AI Settings","success"); }
+function toggleAiPanel(){ document.getElementById("ai-panel").classList.toggle("open"); if(document.getElementById("ai-panel").classList.contains("open") && aiChatHistory.length===0){ pushAiMessage("assistant", "Hi! I'm IDPS AI. Ask me about school-admin tasks."); } }
+
+/* ---------------- IDPS AI CHAT WIDGET ---------------- */
+let aiChatHistory=[];
+function pushAiMessage(role, content){
+  aiChatHistory.push({role, content});
+  const wrap = document.getElementById("ai-messages");
+  const el = document.createElement("div"); el.className = `ai-msg ${role}`; el.textContent = content;
+  wrap.appendChild(el); wrap.scrollTop = wrap.scrollHeight;
 }
 async function sendAiMessage(){
-  const input = document.getElementById("ai-input");
-  const message = input.value.trim();
-  if(!message) return;
+  const msg = document.getElementById("ai-input").value.trim(); if(!msg) return;
+  pushAiMessage("user", msg); document.getElementById("ai-input").value="";
   const settings = loadAiSettings();
-  if(!settings.apiKey){
-    pushAiMessage("user", message);
-    pushAiMessage("system-note", "No API key configured. Add one in Settings → IDPS AI Assistant.");
-    input.value = "";
-    return;
-  }
+  if(!settings.apiKey) return pushAiMessage("system-note", "Settings mein API key daalein.");
   
-  const lastRealMsg = aiChatHistory.slice().reverse().find(m => m.role !== "system-note");
-  if(lastRealMsg && lastRealMsg.role === "user") {
-    pushAiMessage("system-note", "Please wait for the AI to reply before sending another message.");
-    return;
-  }
+  const lastMsg = aiChatHistory.slice().reverse().find(m => m.role !== "system-note");
+  if(lastMsg && lastMsg.role === "user" && aiChatHistory.length > 1) return pushAiMessage("system-note", "Wait for AI.");
 
-  pushAiMessage("user", message);
-  input.value = "";
-  const thinkingEl = document.createElement("div");
-  thinkingEl.className = "ai-msg assistant"; thinkingEl.id = "ai-thinking"; thinkingEl.textContent = "Thinking…";
-  document.getElementById("ai-messages").appendChild(thinkingEl);
-  document.getElementById("ai-messages").scrollTop = document.getElementById("ai-messages").scrollHeight;
-
-  try{
-    const reply = await callAiProvider(settings, message);
-    thinkingEl.remove();
-    pushAiMessage("assistant", reply);
-  }catch(err){
-    console.error(err);
-    thinkingEl.remove();
-    pushAiMessage("system-note", "Error: " + err.message);
-  }
-}
-async function callAiProvider(settings, userMessage){
-  const systemPrompt = buildSchoolContext();
-  if(settings.provider === "gemini"){
-    
-    // 1. Google se zinda models ki list maango (Auto-detect)
+  const thinking = document.createElement("div"); thinking.className="ai-msg assistant"; thinking.textContent="Thinking..."; document.getElementById("ai-messages").appendChild(thinking);
+  
+  try {
     const listUrl = `https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(settings.apiKey.trim())}`;
     const listRes = await fetch(listUrl, { headers: { "x-goog-api-key": settings.apiKey.trim() } });
-    const listData = await listRes.json();
-    if(!listRes.ok) throw new Error(listData.error?.message || "Failed to fetch models list from Google.");
-
-    // 2. Jo model chal raha hai, use automatically chun lo
     let modelName = "models/gemini-1.5-flash"; 
-    if(listData && listData.models){
-       const available = listData.models.filter(m => m.supportedGenerationMethods && m.supportedGenerationMethods.includes("generateContent") && m.name.includes("gemini"));
-       const flashModel = available.find(m => m.name.includes("flash"));
-       if(flashModel) modelName = flashModel.name;
-       else if(available.length > 0) modelName = available[0].name;
+    if(listRes.ok){
+       const listData = await listRes.json();
+       if(listData && listData.models){
+          const available = listData.models.filter(m => m.supportedGenerationMethods && m.supportedGenerationMethods.includes("generateContent") && m.name.includes("gemini"));
+          const flashModel = available.find(m => m.name.includes("flash"));
+          if(flashModel) modelName = flashModel.name;
+          else if(available.length > 0) modelName = available[0].name;
+       }
     }
 
-    // 3. Sahi model ke sath chat bhejo
     const url = `https://generativelanguage.googleapis.com/v1beta/${modelName}:generateContent?key=${encodeURIComponent(settings.apiKey.trim())}`;
-    const historyContents = aiChatHistory.filter(m=>m.role!=="system-note").map(m=>({
-      role: m.role === "assistant" ? "model" : "user",
-      parts: [{text: m.content}]
-    }));
+    const contents = aiChatHistory.filter(m=>m.role!=="system-note").map(m=>({role:m.role==="user"?"user":"model", parts:[{text:m.content}]}));
+    const bodyData = { system_instruction: { parts: [{text: "You are IDPS AI, a helpful school assistant."}] }, contents: contents };
     
-    const bodyData = {
-      system_instruction: { parts: [{ text: systemPrompt }] },
-      contents: historyContents
-    };
-
-    const res = await fetch(url, { 
-      method: "POST", 
-      headers: { "Content-Type": "application/json", "x-goog-api-key": settings.apiKey.trim() }, 
-      body: JSON.stringify(bodyData) 
-    });
-    
-    if(!res.ok) {
-       const errData = await res.json().catch(()=>({}));
-       throw new Error(errData.error?.message || "Gemini API error " + res.status);
-    }
+    const res = await fetch(url, { method:"POST", headers:{"Content-Type":"application/json", "x-goog-api-key": settings.apiKey.trim()}, body: JSON.stringify(bodyData) });
     const data = await res.json();
-    return data?.candidates?.[0]?.content?.parts?.[0]?.text || "(No response text returned.)";
-    
-  } else {
-    const messages = [ { role:"system", content: systemPrompt }, ...aiChatHistory.filter(m=>m.role!=="system-note").map(m=>({ role:m.role, content:m.content })) ];
-    const res = await fetch("https://api.openai.com/v1/chat/completions", {
-      method:"POST",
-      headers:{ "Content-Type":"application/json", "Authorization":"Bearer " + settings.apiKey.trim() },
-      body: JSON.stringify({ model:"gpt-4o-mini", messages, temperature:0.5 })
-    });
-    if(!res.ok) throw new Error("OpenAI API error: " + res.status);
-    const data = await res.json();
-    return data?.choices?.[0]?.message?.content || "(No response text returned.)";
+    if(!res.ok) throw new Error(data.error?.message || "Error " + res.status);
+    thinking.remove();
+    pushAiMessage("assistant", data?.candidates?.[0]?.content?.parts?.[0]?.text || "No reply.");
+  } catch(e) { thinking.remove(); pushAiMessage("system-note", "Error: " + e.message); }
   }
-    }
-          function navigate(view){
+  function navigate(view){
   const outgoing = document.querySelector(".view.active");
   function performSwitch(){
     document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
@@ -590,22 +363,17 @@ async function callAiProvider(settings, userMessage){
     if(view==="dashboard") renderDashboard();
     if(view==="students") renderStudentTable();
     if(view==="fees") renderFeeTable();
-    if(view==="timetable") { populateClassList(); renderTimetableRowsUI(); renderTimetablePreview(); }
-    if(view==="admitcard") { document.getElementById("ac-results").innerHTML=""; document.getElementById("ac-preview-area").innerHTML=""; document.getElementById("ac-search").value=""; }
-    if(view==="marksheet") { document.getElementById("ms-results").innerHTML=""; document.getElementById("ms-editor-area").innerHTML=""; document.getElementById("ms-search").value=""; }
-    if(view==="admissions") { document.getElementById("admission-success").classList.add("hidden"); document.getElementById("admission-success").classList.remove("flex"); }
-    if(view==="settings") { populateAiSettingsForm(); }
+    if(view==="timetable") populateClassList();
+    if(view==="settings") { const s=loadAiSettings(); document.getElementById("ai-provider").value=s.provider||"gemini"; document.getElementById("ai-key").value=s.apiKey||""; }
     window.scrollTo(0,0); document.getElementById("main-scroll").scrollTop = 0; animateViewEnter(view);
   }
-  if(gsapOK() && outgoing){ try{ gsap.to(outgoing, {opacity:0, y:-8, duration:.14, ease:"power1.in", onComplete:()=>{ gsap.set(outgoing,{clearProps:"opacity,transform"}); performSwitch(); }}); return; }catch(e){} }
-  performSwitch();
+  if(gsapOK() && outgoing){ gsap.to(outgoing, {opacity:0, y:-8, duration:.14, onComplete:()=>{ gsap.set(outgoing,{clearProps:"all"}); performSwitch(); }}); } else performSwitch();
 }
 function openSidebar(){ document.getElementById("sidebar").classList.add("open"); document.getElementById("mobile-overlay").classList.remove("hidden"); }
 function closeSidebar(){ document.getElementById("sidebar").classList.remove("open"); document.getElementById("mobile-overlay").classList.add("hidden"); }
-function showAuthScreen(){ document.getElementById("auth-screen").style.display = "flex"; document.getElementById("app").classList.add("hidden"); const btn = document.getElementById("google-signin-btn"); btn.disabled = false; document.getElementById("google-signin-label").textContent = "Continue with Google"; animateAuthCard(); }
-function showAppScreen(user){ document.getElementById("auth-screen").style.display = "none"; document.getElementById("app").classList.remove("hidden"); window.__currentUserFirstName = (user.displayName || "").split(" ")[0] || ""; document.getElementById("user-name").textContent = user.displayName || user.email || "Signed in"; document.getElementById("user-email").textContent = user.email || ""; if(user.photoURL){ document.getElementById("user-avatar").src = user.photoURL; document.getElementById("user-avatar").classList.remove("hidden"); } navigate("dashboard"); animateAppShell(); }
-function updateHeaderDate(){ document.getElementById("header-date").textContent = new Date().toLocaleDateString(undefined,{ weekday:"long", year:"numeric", month:"long", day:"numeric" }); }
-window.addEventListener("DOMContentLoaded", ()=>{ updateHeaderDate(); safeIcons(); animateAuthCard(); });
+function showAuthScreen(){ document.getElementById("auth-screen").style.display="flex"; document.getElementById("app").classList.add("hidden"); animateAuthCard(); }
+function showAppScreen(user){ document.getElementById("auth-screen").style.display="none"; document.getElementById("app").classList.remove("hidden"); window.__currentUserFirstName = (user.displayName||"").split(" ")[0]; document.getElementById("user-name").textContent=user.displayName||"Signed in"; navigate("dashboard"); animateAppShell(); }
+window.addEventListener("DOMContentLoaded", ()=>{ safeIcons(); animateAuthCard(); });
 </script>
 
 <script type="module">
@@ -628,30 +396,24 @@ window.addEventListener("DOMContentLoaded", ()=>{ updateHeaderDate(); safeIcons(
     const firestore = getFirestore(app);
     const provider = new GoogleAuthProvider();
 
-    let unsubscribeSnapshot = null;
-    _firestoreSave = function(data){ const user = auth.currentUser; if(user) setDoc(doc(firestore, "schools", user.uid), data).catch(err=>console.error(err)); };
-
-    document.getElementById("google-signin-btn").addEventListener("click", ()=>{
-      const btn = document.getElementById("google-signin-btn"); btn.disabled = true; document.getElementById("google-signin-label").textContent = "Signing in…";
-      signInWithPopup(auth, provider).then(()=>{ btn.disabled=false; document.getElementById("google-signin-label").textContent="Continue with Google"; }).catch(err=>{ console.error(err); btn.disabled=false; document.getElementById("google-signin-label").textContent="Continue with Google"; });
-    });
+    _firestoreSave = function(data){ if(auth.currentUser) setDoc(doc(firestore, "schools", auth.currentUser.uid), data).catch(console.error); };
+    
+    document.getElementById("google-signin-btn").addEventListener("click", ()=>{ signInWithPopup(auth, provider); });
     document.getElementById("signout-btn").addEventListener("click", ()=>signOut(auth));
 
     onAuthStateChanged(auth, (user)=>{
       if(user){
         showAppScreen(user);
-        if(unsubscribeSnapshot) unsubscribeSnapshot();
-        unsubscribeSnapshot = onSnapshot(doc(firestore, "schools", user.uid), (snap)=>{
-          if(snap.exists()){ DB = Object.assign(defaultDB(), snap.data()); } else { DB = defaultDB(); setDoc(doc(firestore, "schools", user.uid), DB); }
-          ensureDBShape(); rerenderActiveView();
+        onSnapshot(doc(firestore, "schools", user.uid), (snap)=>{
+          if(snap.exists()) { DB = Object.assign(defaultDB(), snap.data()); rerenderActiveView(); }
+          else setDoc(doc(firestore, "schools", user.uid), DB);
         });
       } else {
-        if(unsubscribeSnapshot){ unsubscribeSnapshot(); unsubscribeSnapshot = null; }
         DB = defaultDB(); showAuthScreen();
       }
     });
   }catch(e){
-    document.getElementById("auth-warning").innerHTML = '<strong>Firebase failed to initialize.</strong> Check your config.';
+    document.getElementById("auth-warning").innerHTML = "Firebase failed to initialize. Double-check your config.";
     document.getElementById("auth-warning").classList.remove("hidden");
   }
 </script>
